@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SmartBook.Views;
 
 namespace SmartBook
 {
@@ -19,6 +20,7 @@ namespace SmartBook
         public MainWindow()
         {
             InitializeComponent();
+            MainFrame.Navigate(new LoginView());
         }
     }
 }
