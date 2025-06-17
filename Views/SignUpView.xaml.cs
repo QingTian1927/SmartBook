@@ -1,18 +1,74 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using SmartBook.Core.Models;
+using SmartBook.Core.Services;
+using SmartBook.Utils;
 
 namespace SmartBook.Views;
 
 public partial class SignUpView : Page
 {
+    private readonly AuthService _authService = AuthService.Instance;
+    
     public SignUpView()
     {
         InitializeComponent();
     }
 
-    private void BtnCreateAccount_Click(object sender, RoutedEventArgs e)
+    // ReSharper disable once AsyncVoidMethod
+    private async void BtnCreateAccount_Click(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        string username = txtUsername.Text;
+        string email = txtEmail.Text;
+        string password = txtPassword.Password;
+
+        if (!Validator.IsValidUsername(username))
+        {
+            MessageBox.Show(
+                "Invalid username.\nUsername must be 4 to 99 characters long and may contain only letters, numbers, and underscores (A-Z, a-z, 0-9, _).",
+                "Sign Up Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning
+            );
+            return;
+        }
+        
+        if (!Validator.IsValidEmail(email))
+        {
+            MessageBox.Show(
+                "Please enter a valid email address",
+                "Sign Up Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning
+            );
+            return;
+        }
+
+        if (!Validator.IsValidPassword(password))
+        {
+            MessageBox.Show(
+                "Invalid password.\nPassword must be 3 to 32 characters long and can include letters, numbers, and special characters (!@#$%^&*()-_=+[]{}|:;'\",.<>?/).",
+                "Sign Up Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning
+            );
+            return;
+        }
+
+        User user = new User()
+        {
+            Username = username,
+            Email = email,
+            Password = BCrypt.Net.BCrypt.HashPassword(password)
+        };
+        
+        bool registered = await _authService.RegisterUserAsync(user);
+        if (registered)
+        {
+            MessageBox.Show("Registration successful: " + user);
+            return;
+        }
+        MessageBox.Show("Registration failed: " + user);
     }
 
     private void BtnBackToLogin_Click(object sender, RoutedEventArgs e)
