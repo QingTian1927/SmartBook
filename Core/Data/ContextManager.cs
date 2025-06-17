@@ -30,4 +30,6 @@ public static class ContextManager
             return builder.Build();
         }
     }
+
+    public static bool IsAdmin { get; set; } = false;
 }
