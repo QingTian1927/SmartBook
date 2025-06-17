@@ -17,10 +17,32 @@ namespace SmartBook
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static MainWindow? _instance;
+
+        public static MainWindow Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new MainWindow();
+                }
+                return _instance;
+            }
+        }
+        
         public MainWindow()
         {
+            _instance = this;
             InitializeComponent();
-            MainFrame.Navigate(new LoginView());
+
+            Title = "SmartBook - Login";
+            Navigate(new LoginView());
+        }
+
+        public void Navigate(Page page)
+        {
+            MainFrame.Navigate(page);
         }
     }
 }
