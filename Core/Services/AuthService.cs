@@ -22,6 +22,11 @@ public class AuthService : IAuthService
         }
     }
 
+    public static bool IsMatchingPassword(string password, string passwordHash)
+    {
+        return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+    }
+
     public async Task<bool> ExistsUser(string email)
     {
         return await _db.Users.AnyAsync(u => u.Email == email);
@@ -35,8 +40,7 @@ public class AuthService : IAuthService
             return null;
         }
 
-        bool isValid = BCrypt.Net.BCrypt.Verify(password, user.Password);
-        return isValid ? user : null;
+        return IsMatchingPassword(password, user.Password) ? user : null;
     }
 
     public async Task<bool> RegisterUserAsync(User user)
