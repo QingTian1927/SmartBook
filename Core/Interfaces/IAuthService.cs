@@ -9,8 +9,9 @@ namespace SmartBook.Core.Interfaces
 {
     public interface IAuthService
     {
-        Task<User?> AuthenticateAsync(string username, string password);
-        Task<bool> RegisterUserAsync(User newUser);
+        Task<bool> ExistsUser(string email);
+        Task<User?> AuthenticateAsync(string email, string password);
+        Task<bool> RegisterUserAsync(User user);
         Task<User?> GetUserByIdAsync(int userId);
     }
 }
