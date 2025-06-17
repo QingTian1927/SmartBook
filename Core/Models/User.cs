@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SmartBook.Core.Models;
 
+[Index("Email", Name = "UQ__Users__A9D105340F76449F", IsUnique = true)]
 public partial class User
 {
     [Key]
@@ -17,9 +18,9 @@ public partial class User
     [StringLength(255)]
     public string Email { get; set; } = null!;
 
-    [StringLength(255)]
-    public string PasswordHash { get; set; } = null!;
+    [StringLength(512)]
+    public string Password { get; set; } = null!;
 
     [InverseProperty("User")]
-    public virtual ICollection<Book> Books { get; set; } = new List<Book>();
+    public virtual ICollection<UserBook> UserBooks { get; set; } = new List<UserBook>();
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SmartBook.Core.Models;
 
+[Index("Title", "AuthorId", Name = "IX_Books_TitleAuthor", IsUnique = true)]
 public partial class Book
 {
     [Key]
@@ -14,25 +15,18 @@ public partial class Book
     [StringLength(255)]
     public string Title { get; set; } = null!;
 
-    public int AuthorID { get; set; }
+    public int AuthorId { get; set; }
 
-    public int CategoryID { get; set; }
+    public int CategoryId { get; set; }
 
-    public int UserID { get; set; }
-
-    public bool IsRead { get; set; }
-
-    public int? Rating { get; set; }
-
-    [ForeignKey("AuthorID")]
+    [ForeignKey("AuthorId")]
     [InverseProperty("Books")]
     public virtual Author Author { get; set; } = null!;
 
-    [ForeignKey("CategoryID")]
+    [ForeignKey("CategoryId")]
     [InverseProperty("Books")]
     public virtual Category Category { get; set; } = null!;
 
-    [ForeignKey("UserID")]
-    [InverseProperty("Books")]
-    public virtual User User { get; set; } = null!;
+    [InverseProperty("Book")]
+    public virtual ICollection<UserBook> UserBooks { get; set; } = new List<UserBook>();
 }

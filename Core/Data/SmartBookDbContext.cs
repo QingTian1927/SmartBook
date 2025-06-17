@@ -25,7 +25,10 @@ public partial class SmartBookDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+    public virtual DbSet<UserBook> UserBooks { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
         IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
         if (!optionsBuilder.IsConfigured) {
             optionsBuilder.UseSqlServer(config.GetConnectionString("DB"));
@@ -36,12 +39,12 @@ public partial class SmartBookDbContext : DbContext
     {
         modelBuilder.Entity<Author>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Authors__3214EC07EFE686B5");
+            entity.HasKey(e => e.Id).HasName("PK__Authors__3214EC079C542960");
         });
 
         modelBuilder.Entity<Book>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Books__3214EC07DDA5D807");
+            entity.HasKey(e => e.Id).HasName("PK__Books__3214EC073E67B45C");
 
             entity.HasOne(d => d.Author).WithMany(p => p.Books)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -50,20 +53,29 @@ public partial class SmartBookDbContext : DbContext
             entity.HasOne(d => d.Category).WithMany(p => p.Books)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Books_Categories");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Books)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Books_Users");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Categori__3214EC07269B1DBB");
+            entity.HasKey(e => e.Id).HasName("PK__Categori__3214EC073BEE0368");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC077E05707D");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07B686AE73");
+        });
+
+        modelBuilder.Entity<UserBook>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UserBook__3214EC07FF734993");
+
+            entity.HasOne(d => d.Book).WithMany(p => p.UserBooks)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserBooks_Books");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserBooks)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserBooks_Users");
         });
 
         OnModelCreatingPartial(modelBuilder);
