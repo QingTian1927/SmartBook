@@ -4,17 +4,17 @@ USE SmartBook;
 */
 
 INSERT INTO Users (Username, Email, Password)
-VALUES (N'aliceReader', N'alice@example.com', N'$2a$10$alicehash1'),
-       (N'bobWriter', N'bob@example.com', N'$2a$10$bobhash1'),
-       (N'carolUser', N'carol@example.com', N'$2a$10$carolhash1'),
-       (N'davidDev', N'david@example.com', N'$2a$10$davidhash1'),
-       (N'eveResearch', N'eve@example.com', N'$2a$10$evehash1'),
-       (N'frankTest', N'frank@example.com', N'$2a$10$frankhash1'),
-       (N'graceQA', N'grace@example.com', N'$2a$10$gracehash1'),
-       (N'henryAdmin', N'henry@example.com', N'$2a$10$henryhash1'),
-       (N'ivyAuthor', N'ivy@example.com', N'$2a$10$ivyhash1'),
-       (N'jackScholar', N'jack@example.com', N'$2a$10$jackhash1'),
-       (N'karenReader', N'karen@example.com', N'$2a$10$karenhash1');
+VALUES (N'aliceReader', N'alice@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'bobWriter', N'bob@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'carolUser', N'carol@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'davidDev', N'david@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'eveResearch', N'eve@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'frankTest', N'frank@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'graceQA', N'grace@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'henryAdmin', N'henry@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'ivyAuthor', N'ivy@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'jackScholar', N'jack@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS'),
+       (N'karenReader', N'karen@example.com', N'$2a$11$2E/hO3JwSfloiPVbHREpheOybBbNxKbcvaQPf0b6F.wQ0Uyad98qS');
 
 INSERT INTO Authors (Name, Bio)
 VALUES (N'George Orwell', N'Dystopian novelist and essayist.'),
