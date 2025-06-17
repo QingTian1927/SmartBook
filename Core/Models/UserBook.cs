@@ -27,4 +27,10 @@ public partial class UserBook
     [ForeignKey("UserId")]
     [InverseProperty("UserBooks")]
     public virtual User User { get; set; } = null!;
+
+    public override string ToString()
+    {
+        return
+            $"{nameof(Id)}: {Id}, {nameof(UserId)}: {UserId}, {nameof(BookId)}: {BookId}, {nameof(IsRead)}: {IsRead}, {nameof(Rating)}: {Rating}, {nameof(Book)}: {Book}, {nameof(User)}: {User}";
+    }
 }

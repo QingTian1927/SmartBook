@@ -29,4 +29,10 @@ public partial class Book
 
     [InverseProperty("Book")]
     public virtual ICollection<UserBook> UserBooks { get; set; } = new List<UserBook>();
+
+    public override string ToString()
+    {
+        return
+            $"{nameof(Id)}: {Id}, {nameof(Title)}: {Title}, {nameof(AuthorId)}: {AuthorId}, {nameof(CategoryId)}: {CategoryId}, {nameof(Author)}: {Author}, {nameof(Category)}: {Category}, {nameof(UserBooks)}: {UserBooks}";
+    }
 }

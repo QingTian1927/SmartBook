@@ -18,4 +18,9 @@ public partial class Author
 
     [InverseProperty("Author")]
     public virtual ICollection<Book> Books { get; set; } = new List<Book>();
+
+    public override string ToString()
+    {
+        return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Bio)}: {Bio}, {nameof(Books)}: {Books}";
+    }
 }

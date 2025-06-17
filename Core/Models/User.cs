@@ -23,4 +23,10 @@ public partial class User
 
     [InverseProperty("User")]
     public virtual ICollection<UserBook> UserBooks { get; set; } = new List<UserBook>();
+
+    public override string ToString()
+    {
+        return
+            $"{nameof(Id)}: {Id}, {nameof(Username)}: {Username}, {nameof(Email)}: {Email}, {nameof(Password)}: {Password}, {nameof(UserBooks)}: {UserBooks}";
+    }
 }

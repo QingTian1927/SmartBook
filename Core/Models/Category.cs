@@ -16,4 +16,9 @@ public partial class Category
 
     [InverseProperty("Category")]
     public virtual ICollection<Book> Books { get; set; } = new List<Book>();
+
+    public override string ToString()
+    {
+        return $"{nameof(Id)}: {Id}, {nameof(Name)}: {Name}, {nameof(Books)}: {Books}";
+    }
 }
