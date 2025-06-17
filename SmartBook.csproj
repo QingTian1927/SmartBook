@@ -20,8 +20,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Core\Services\" />
     <Folder Include="Tests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
