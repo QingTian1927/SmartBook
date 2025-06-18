@@ -29,7 +29,7 @@
             <!-- Header Filters -->
             <WrapPanel Grid.Row="0" Margin="20" VerticalAlignment="Center">
                 <TextBlock Text="Category:" VerticalAlignment="Center" Margin="0 0 5 0" />
-                <ComboBox Width="150" Margin="0 0 20 0" />
+                <ComboBox x:Name="CategoryComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Width="150" Margin="0 0 20 0" />
                 <TextBlock Text="Search:" VerticalAlignment="Center" Margin="0 0 5 0" />
                 <TextBox Width="200" Margin="0 0 20 0" />
                 <Button Content="Add Book" Background="#1E2D40" Foreground="White" Padding="8,4" FontWeight="Bold" />

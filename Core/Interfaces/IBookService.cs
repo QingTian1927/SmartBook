@@ -20,5 +20,6 @@ namespace SmartBook.Core.Interfaces
         Task<IEnumerable<BookDisplayModel>> GetAllBooksDisplayAsync(int userId);
         Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(string? category = null, bool? isRead = null);
         Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(int userId, string? category = null, bool? isRead = null);
+        Task<IEnumerable<CategoryDisplayModel>> GetAllCategoriesAsync();
     }
 }

@@ -135,7 +135,8 @@ public class BookService : IBookService
         }).ToList();
     }
 
-    public async Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(string? category = null, bool? isRead = null)
+    public async Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(string? category = null,
+        bool? isRead = null)
     {
         var query = _db.UserBooks
             .Include(ub => ub.Book).ThenInclude(b => b.Author)
@@ -199,5 +200,17 @@ public class BookService : IBookService
             Rating = ub.Rating,
             CoverImagePath = "" // TODO: Add cover image path here if needed
         }).ToList();
+    }
+
+    public async Task<IEnumerable<CategoryDisplayModel>> GetAllCategoriesAsync()
+    {
+        return await _db.Categories.Select(c => new CategoryDisplayModel
+            {
+                Id = c.Id,
+                Name = c.Name
+            })
+            .OrderBy(c => c.Name)
+            .Distinct()
+            .ToListAsync();
     }
 }
