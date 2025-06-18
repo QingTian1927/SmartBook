@@ -28,6 +28,34 @@ public partial class DashboardView : Page
         await LoadBooksAsync();
         await LoadCategoriesAsync();
     }
+    
+    // ReSharper disable once AsyncVoidMethod
+    private async void CategoryComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        IEnumerable<BookDisplayModel>? books;
+        if (_currentUser is null && ContextManager.IsAdmin)
+        {
+            books = await _bookService.FilterBooksDisplayAsync((int?) CategoryComboBox.SelectedIndex);
+        }
+        else if (_currentUser is not null && !ContextManager.IsAdmin)
+        {
+            books = await _bookService.FilterBooksDisplayAsync(_currentUser.Id, CategoryComboBox.SelectedIndex);
+        }
+        else
+        {
+            MessageBox.Show(
+                "No login detected. Please login first before viewing books",
+                "Listing Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+
+            MainWindow.Instance.Navigate(new LoginView());
+            return;
+        }
+
+        BookGrid.ItemsSource = books;
+    }
 
     private async Task LoadBooksAsync()
     {

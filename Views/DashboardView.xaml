@@ -29,18 +29,18 @@
             <!-- Header Filters -->
             <WrapPanel Grid.Row="0" Margin="20" VerticalAlignment="Center">
                 <TextBlock Text="Category:" VerticalAlignment="Center" Margin="0 0 5 0" />
-                <ComboBox x:Name="CategoryComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Width="150" Margin="0 0 20 0" />
+                <ComboBox x:Name="CategoryComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Width="150" Margin="0 0 20 0" SelectionChanged="CategoryComboBox_OnSelectionChanged" />
                 <TextBlock Text="Search:" VerticalAlignment="Center" Margin="0 0 5 0" />
                 <TextBox Width="200" Margin="0 0 20 0" />
                 <Button Content="Add Book" Background="#1E2D40" Foreground="White" Padding="8,4" FontWeight="Bold" />
             </WrapPanel>
 
             <!-- Book Grid -->
-            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" Margin="20" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="BookGrid">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" />
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 

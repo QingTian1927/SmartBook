@@ -68,7 +68,17 @@ public class BookService : IBookService
         }
     }
 
-    public async Task<IEnumerable<Book>> FilterBooksAsync(int userId, string? category = null, bool? isRead = null)
+    public async Task<int?> CalculateAverageRatingAsync(int bookId)
+    {
+        var query = _db.UserBooks
+            .Where(ub => ub.BookId == bookId)
+            .AsQueryable();
+
+        return (int?) await query
+            .AverageAsync(ub => ub.Rating);
+    }
+
+    public async Task<IEnumerable<Book>> FilterBooksAsync(int userId, int? categoryId = null, bool? isRead = null)
     {
         var query = _db.UserBooks
             .Where(ub => ub.UserId == userId)
@@ -78,9 +88,9 @@ public class BookService : IBookService
             .ThenInclude(b => b.Category)
             .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(category))
+        if (categoryId.HasValue)
         {
-            query = query.Where(ub => ub.Book.Category.Name == category);
+            query = query.Where(ub => ub.Book.Category.Id == categoryId);
         }
 
         if (isRead.HasValue)
@@ -90,6 +100,83 @@ public class BookService : IBookService
 
         return await query
             .Select(ub => ub.Book)
+            .Distinct()
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(int? categoryId = null)
+    {
+        if (categoryId is 0)
+        {
+            return await GetAllBooksDisplayAsync();
+        }
+        
+        var query = _db.Books
+            .Include(b => b.Author)
+            .Include(b => b.Category)
+            .AsQueryable();
+
+        if (categoryId.HasValue)
+        {
+            query = query.Where(b => b.CategoryId == categoryId);
+        }
+
+        var books = await query.ToListAsync();
+
+        var tasks = books.Select(async b => new BookDisplayModel
+        {
+            BookId = b.Id,
+            Title = b.Title,
+            AuthorName = b.Author.Name,
+            CategoryName = b.Category.Name,
+            IsRead = false,
+            Rating = await CalculateAverageRatingAsync(b.Id),
+            UserBookId = 0,
+            CoverImagePath = ""
+        }).ToList();
+        
+        return await Task.WhenAll(tasks);
+    }
+
+
+    public async Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(int userId, int? categoryId = null,
+        bool? isRead = null)
+    {
+        if (categoryId is 0)
+        {
+            return await GetAllBooksDisplayAsync(userId);
+        }
+        
+        var query = _db.UserBooks
+            .Where(ub => ub.UserId == userId)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Author)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Category)
+            .AsQueryable();
+
+        if (categoryId.HasValue)
+        {
+            query = query.Where(ub => ub.Book.Category.Id == categoryId);
+        }
+
+        if (isRead.HasValue)
+        {
+            query = query.Where(ub => ub.IsRead == isRead.Value);
+        }
+
+        return await query
+            .Select(ub => new BookDisplayModel
+            {
+                BookId = ub.BookId,
+                AuthorName = ub.Book.Author.Name,
+                CategoryName = ub.Book.Category.Name,
+                IsRead = ub.IsRead,
+                Rating = ub.Rating,
+                Title = ub.Book.Title,
+                UserBookId = ub.BookId,
+                CoverImagePath = "" // TODO: Add cover image path here if needed
+            })
             .Distinct()
             .ToListAsync();
     }
