@@ -1,0 +1,71 @@
+﻿<Page x:Class="SmartBook.Views.DashboardView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:SmartBook.Views"
+      xmlns:views="clr-namespace:SmartBook.Views.Components"
+      mc:Ignorable="d"
+      Title="DashboardView"
+      Background="White"
+      Loaded="Page_Loaded">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Reusable Sidebar -->
+        <views:SidebarView CurrentUsername="{Binding CurrentUsername}" />
+
+        <!-- Main Content Area -->
+        <Grid Grid.Column="1" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header Filters -->
+            <WrapPanel Grid.Row="0" Margin="20" VerticalAlignment="Center">
+                <TextBlock Text="Category:" VerticalAlignment="Center" Margin="0 0 5 0" />
+                <ComboBox Width="150" Margin="0 0 20 0" />
+                <TextBlock Text="Search:" VerticalAlignment="Center" Margin="0 0 5 0" />
+                <TextBox Width="200" Margin="0 0 20 0" />
+                <Button Content="Add Book" Background="#1E2D40" Foreground="White" Padding="8,4" FontWeight="Bold" />
+            </WrapPanel>
+
+            <!-- Book Grid -->
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="BookGrid">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="160" Height="280" Margin="10" Background="#F9F9F9" BorderBrush="#DDD"
+                                    BorderThickness="1" CornerRadius="6">
+                                <StackPanel>
+                                    <Image Source="{Binding CoverImagePath}" Height="180" Stretch="UniformToFill" />
+                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="12" Margin="5 2 5 0"
+                                               TextWrapping="Wrap" TextAlignment="Center" />
+                                    <TextBlock Text="{Binding AuthorName}" FontSize="10" Foreground="Gray"
+                                               Margin="5 0 5 0" TextAlignment="Center" />
+                                    <TextBlock Text="{Binding CategoryName}" FontSize="10" Foreground="DarkGray"
+                                               Margin="5 0 5 0" TextAlignment="Center" />
+                                    <TextBlock Text="{Binding IsRead, StringFormat=Read: {0}}" FontSize="10"
+                                               Margin="5 0 5 0" TextAlignment="Center" />
+                                    <TextBlock Text="{Binding Rating, StringFormat=Rating: {0}}" FontSize="10"
+                                               Margin="5 0 5 0" TextAlignment="Center" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>
