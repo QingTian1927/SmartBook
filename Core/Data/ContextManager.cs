@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
+using SmartBook.Core.Models;
 
 namespace SmartBook.Core.Data;
 
@@ -31,5 +32,6 @@ public static class ContextManager
         }
     }
 
-    public static bool IsAdmin { get; set; } = false;
+    public static bool IsAdmin { get; set; }
+    public static User? CurrentUser { get; set; }
 }
