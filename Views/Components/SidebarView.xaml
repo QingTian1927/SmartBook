@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="SmartBook.Views.Components.SidebarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SmartBook.Views.Components"
+             mc:Ignorable="d"
+             Height="Auto" Width="Auto" Background="#1E2D40"
+             d:DesignHeight="Auto" d:DesignWidth="Auto">
+    <Grid>
+        <StackPanel Margin="20" VerticalAlignment="Stretch">
+            <TextBlock Text="SmartBook" FontSize="28" FontWeight="Bold" Foreground="White" TextAlignment="Center"
+                       Margin="0 20" />
+
+            <Border Background="#2A3B4D" Padding="10" CornerRadius="6" Margin="0 0 0 20">
+                <StackPanel>
+                    <TextBlock Text="Welcome back" FontSize="10" Foreground="LightGray" />
+                    <TextBlock Text="{Binding CurrentUsername, RelativeSource={RelativeSource AncestorType=UserControl}}" FontSize="14" Foreground="White" FontWeight="Bold" />
+                </StackPanel>
+            </Border>
+
+            <Button Content="📖  Reading History" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="HistoryBtn_Click" />
+
+            <Button Content="⭐  Recommendations" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="RecommendationBtn_Click" />
+
+            <Button Content="⚙  Settings" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="SettingsBtn_Click" />
+
+            <Button Content="🚪  Log Out" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="LogoutBtn_Click" />
+        </StackPanel>
+    </Grid>
+</UserControl>
