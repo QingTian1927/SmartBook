@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
 using SmartBook.Core.Services;
 using SmartBook.Utils;
@@ -8,7 +9,7 @@ namespace SmartBook.Views;
 
 public partial class SignUpView : Page
 {
-    private readonly AuthService _authService = AuthService.Instance;
+    private readonly IAuthService _authService = AuthService.Instance;
     
     public SignUpView()
     {
@@ -65,10 +66,12 @@ public partial class SignUpView : Page
         bool registered = await _authService.RegisterUserAsync(user);
         if (registered)
         {
-            MessageBox.Show("Registration successful: " + user);
+            MessageBox.Show("Registration successful!");
+            MainWindow.Instance.Navigate(new LoginView());
             return;
         }
-        MessageBox.Show("Registration failed: " + user);
+        
+        MessageBox.Show("Registration failed! Please try again.");
     }
 
     private void BtnBackToLogin_Click(object sender, RoutedEventArgs e)

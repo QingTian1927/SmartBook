@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using Microsoft.Extensions.Configuration;
 using SmartBook.Core.Data;
+using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
 using SmartBook.Core.Services;
 using SmartBook.Utils;
@@ -10,7 +11,7 @@ namespace SmartBook.Views;
 
 public partial class LoginView : Page
 {
-    private readonly AuthService _authService = AuthService.Instance;
+    private readonly IAuthService _authService = AuthService.Instance;
     private readonly IConfiguration _configuration = ContextManager.Configuration;
 
     public LoginView()
@@ -32,7 +33,10 @@ public partial class LoginView : Page
             return false;
         }
 
-        MessageBox.Show("Login successful: " + user);
+        ContextManager.CurrentUser = user;
+        ContextManager.IsAdmin = false;
+        MainWindow.Instance.Navigate(new DashboardView());
+
         return true;
     }
 
@@ -71,12 +75,15 @@ public partial class LoginView : Page
         {
             if (adminEmail.Equals(email) && AuthService.IsMatchingPassword(password, adminPassword))
             {
-                 ContextManager.IsAdmin = true;  
-                 MessageBox.Show("Admin Login Successful");
-                 return;
+                ContextManager.IsAdmin = true;
+                ContextManager.CurrentUser = null;
+
+                MessageBox.Show("Admin Login Successful");
+                MainWindow.Instance.Navigate(new DashboardView());
+                return;
             }
         }
-        
+
         await AuthenticateNormalUser(email, password);
     }
 
