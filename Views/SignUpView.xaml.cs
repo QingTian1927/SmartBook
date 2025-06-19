@@ -9,8 +9,9 @@ namespace SmartBook.Views;
 
 public partial class SignUpView : Page
 {
+    private readonly IEmailService _emailService = EmailService.Instance;
     private readonly IAuthService _authService = AuthService.Instance;
-    
+
     public SignUpView()
     {
         InitializeComponent();
@@ -33,7 +34,7 @@ public partial class SignUpView : Page
             );
             return;
         }
-        
+
         if (!Validator.IsValidEmail(email))
         {
             MessageBox.Show(
@@ -62,15 +63,29 @@ public partial class SignUpView : Page
             Email = email,
             Password = BCrypt.Net.BCrypt.HashPassword(password)
         };
-        
+
         bool registered = await _authService.RegisterUserAsync(user);
         if (registered)
         {
-            MessageBox.Show("Registration successful!");
-            MainWindow.Instance.Navigate(new LoginView());
+            try
+            {
+                await _emailService.SendAccountCreatedEmailAsync(user.Email);
+                MainWindow.Instance.Navigate(new LoginView());
+                MessageBox.Show("Registration successful!");
+            }
+            catch (NullReferenceException ex)
+            {
+                MessageBox.Show(
+                    "Failed to send confirmation email:\n\n" + ex,
+                    "Registration Failure",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
+
             return;
         }
-        
+
         MessageBox.Show("Registration failed! Please try again.");
     }
 
