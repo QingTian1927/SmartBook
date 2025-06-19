@@ -92,4 +92,10 @@ public partial class LoginView : Page
         MainWindow.Instance.Title = "SmartBook - Login";
         MainWindow.Instance.Navigate(new SignUpView());
     }
+
+    private void ForgotPassword_Click(object sender, RoutedEventArgs e)
+    {
+        MainWindow.Instance.Title = "SmartBook - ForgotPassword";
+        MainWindow.Instance.Navigate(new ForgotPasswordView());
+    }
 }
