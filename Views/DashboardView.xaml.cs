@@ -56,6 +56,36 @@ public partial class DashboardView : Page
 
         BookGrid.ItemsSource = books;
     }
+    
+    // ReSharper disable once AsyncVoidMethod
+    private async void SearchBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        IEnumerable<BookDisplayModel>? books;
+        var keyword = SearchBox.Text;
+
+        if (_currentUser is null && ContextManager.IsAdmin)
+        {
+            books = await _bookService.SearchBooksDisplayAsync(keyword);
+        }
+        else if (_currentUser is not null && !ContextManager.IsAdmin)
+        {
+            books = await _bookService.SearchBooksDisplayAsync(_currentUser.Id, keyword, CategoryComboBox.SelectedIndex);
+        }
+        else
+        {
+            MessageBox.Show(
+                "No login detected. Please login first before viewing books",
+                "Listing Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
+
+            MainWindow.Instance.Navigate(new LoginView());
+            return;
+        }
+        
+        BookGrid.ItemsSource = books;
+    }
 
     private async Task LoadBooksAsync()
     {

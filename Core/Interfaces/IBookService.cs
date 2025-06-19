@@ -19,6 +19,8 @@ namespace SmartBook.Core.Interfaces
         Task<IEnumerable<Book>> FilterBooksAsync(int userId, int? categoryId = null, bool? isRead = null);
         Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(int? categoryId = null);
         Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(int userId, int? categoryId = null, bool? isRead = null);
+        Task<IEnumerable<BookDisplayModel>> SearchBooksDisplayAsync(string? keyword, int? categoryId = null);
+        Task<IEnumerable<BookDisplayModel>> SearchBooksDisplayAsync(int userId, string? keyword, int? categoryId = null, bool? isRead = null);
         Task<IEnumerable<BookDisplayModel>> GetAllBooksDisplayAsync();
         Task<IEnumerable<BookDisplayModel>> GetAllBooksDisplayAsync(int userId);
         Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(string? category = null, bool? isRead = null);

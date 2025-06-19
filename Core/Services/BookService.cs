@@ -181,6 +181,80 @@ public class BookService : IBookService
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<BookDisplayModel>> SearchBooksDisplayAsync(string? keyword, int? categoryId = null)
+    {
+        if (string.IsNullOrEmpty(keyword))
+        {
+            return await FilterBooksDisplayAsync(categoryId);
+        }
+        
+        var query = _db.Books
+            .Include(b => b.Author)
+            .Include(b => b.Category)
+            .AsQueryable();
+
+        if (categoryId.HasValue && categoryId != 0)
+        {
+            query = query.Where(b => b.CategoryId == categoryId);
+        }
+
+        var books = await query
+            .Where(b => b.Title.ToLower().Contains(keyword.ToLower()))
+            .ToListAsync();
+
+        var tasks = books.Select(async b => new BookDisplayModel
+        {
+            BookId = b.Id,
+            Title = b.Title,
+            AuthorName = b.Author.Name,
+            CategoryName = b.Category.Name,
+            IsRead = false,
+            Rating = await CalculateAverageRatingAsync(b.Id),
+            UserBookId = 0,
+            CoverImagePath = ""
+        }).ToList();
+        
+        return await Task.WhenAll(tasks);
+    }
+
+    public async Task<IEnumerable<BookDisplayModel>> SearchBooksDisplayAsync(int userId, string? keyword, int? categoryId = null, bool? isRead = null)
+    {
+        if (string.IsNullOrEmpty(keyword))
+        {
+            return await FilterBooksDisplayAsync(userId, categoryId, isRead);
+        }
+        
+        var query = _db.UserBooks
+            .Where(ub => ub.UserId == userId)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Author)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Category)
+            .AsQueryable();
+
+        if (categoryId.HasValue && categoryId != 0)
+        {
+            query = query.Where(ub => ub.Book.Category.Id == categoryId);
+        }
+
+        query = query.Where(ub => ub.Book.Title.ToLower().Contains(keyword.ToLower()));
+        
+        return await query
+            .Select(ub => new BookDisplayModel
+            {
+                BookId = ub.BookId,
+                AuthorName = ub.Book.Author.Name,
+                CategoryName = ub.Book.Category.Name,
+                IsRead = ub.IsRead,
+                Rating = ub.Rating,
+                Title = ub.Book.Title,
+                UserBookId = ub.BookId,
+                CoverImagePath = "" // TODO: Add cover image path here if needed
+            })
+            .Distinct()
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<BookDisplayModel>> GetAllBooksDisplayAsync()
     {
         var userBooks = await _db.UserBooks
