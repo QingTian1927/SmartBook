@@ -2,14 +2,16 @@
 using SmartBook.Core.Data;
 using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
+using Exception = System.Exception;
 
 namespace SmartBook.Core.Services;
 
 public class AuthService : IAuthService
 {
     private readonly SmartBookDbContext _db = ContextManager.Context;
-    
+
     private static AuthService? _instance;
+
     public static AuthService Instance
     {
         get
@@ -18,6 +20,7 @@ public class AuthService : IAuthService
             {
                 _instance = new AuthService();
             }
+
             return _instance;
         }
     }
@@ -62,8 +65,27 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<User?> GetUserByIdAsync(int userId)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
-        return await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+    }
+
+    public async Task<bool> UpdateUserAsync(User user)
+    {
+        try
+        {
+            if (!await ExistsUser(user.Email))
+            {
+                return false;
+            }
+
+            _db.Users.Update(user);
+            return await _db.SaveChangesAsync() > 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] UpdateUserAsync: {ex.Message}");
+            return false;
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
 using SmartBook.Core.Models;
+using SmartBook.Core.Services;
 
 namespace SmartBook.Core.Data;
 
@@ -34,4 +35,35 @@ public static class ContextManager
 
     public static bool IsAdmin { get; set; }
     public static User? CurrentUser { get; set; }
+
+    private static string? _passwordResetCode;
+    private static DateTime? _passwordResetCreatedDate;
+
+    public static string? PasswordResetEmail { get; set; }
+    public static string? PasswordResetCode
+    {
+        get
+        {
+            if (!_passwordResetCreatedDate.HasValue)
+            {
+                return null;
+            }
+
+            if (_passwordResetCreatedDate.Value.AddMinutes(EmailService.PasswordResetCodeExpirationMinutes) <=
+                DateTime.UtcNow)
+            {
+                _passwordResetCode = null;
+                _passwordResetCreatedDate = null;
+                return null;
+            }
+
+            return _passwordResetCode;
+        }
+
+        set
+        {
+            _passwordResetCode = value;
+            _passwordResetCreatedDate = DateTime.UtcNow;
+        }
+    }
 }

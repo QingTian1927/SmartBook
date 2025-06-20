@@ -12,6 +12,7 @@ namespace SmartBook.Core.Interfaces
         Task<bool> ExistsUser(string email);
         Task<User?> AuthenticateAsync(string email, string password);
         Task<bool> RegisterUserAsync(User user);
-        Task<User?> GetUserByIdAsync(int userId);
+        Task<User?> GetUserByEmailAsync(string email);
+        Task<bool> UpdateUserAsync(User user);
     }
 }
