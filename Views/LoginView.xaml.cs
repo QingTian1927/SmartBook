@@ -35,6 +35,8 @@ public partial class LoginView : Page
 
         ContextManager.CurrentUser = user;
         ContextManager.IsAdmin = false;
+        
+        MainWindow.Instance.Title = "SmartBook - Dashboard"; 
         MainWindow.Instance.Navigate(new DashboardView());
 
         return true;
