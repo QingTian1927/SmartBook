@@ -60,9 +60,17 @@ public class BookService : IBookService
 
     public async Task DeleteBookAsync(int bookId)
     {
-        var book = await _db.Books.FindAsync(bookId);
+        var book = await _db.Books
+            .Include(b => b.UserBooks) // Ensure related data is loaded
+            .FirstOrDefaultAsync(b => b.Id == bookId);
+
         if (book != null)
         {
+            // Remove all associated UserBooks first
+            var relatedUserBooks = _db.UserBooks.Where(ub => ub.BookId == bookId);
+            _db.UserBooks.RemoveRange(relatedUserBooks);
+
+            // Now remove the book
             _db.Books.Remove(book);
             await _db.SaveChangesAsync();
         }
@@ -346,5 +354,28 @@ public class BookService : IBookService
     public async Task<Category?> GetCategoryByIdAsync(int categoryId)
     {
         return await _db.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+    }
+    
+    public async Task<List<UserBook>> GetAllUserBooksAsync(int userId)
+    {
+        return await _db.UserBooks
+            .Where(ub => ub.UserId == userId)
+            .ToListAsync();
+    }
+
+    public async Task UpdateUserBookAsync(UserBook userBook)
+    {
+        _db.UserBooks.Update(userBook);
+        await _db.SaveChangesAsync();
+    }
+    
+    public async Task DeleteUserBookAsync(int userBookId)
+    {
+        var userBook = await _db.UserBooks.FindAsync(userBookId);
+        if (userBook != null)
+        {
+            _db.UserBooks.Remove(userBook);
+            await _db.SaveChangesAsync();
+        }
     }
 }

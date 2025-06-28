@@ -3,11 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using SmartBook.Core.Data;
 using SmartBook.Core.DTOs;
-using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
 using SmartBook.Core.Services;
 
-namespace SmartBook.Views.Components;
+namespace SmartBook.Views;
 
 public partial class AddBookView : Page
 {

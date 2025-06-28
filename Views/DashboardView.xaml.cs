@@ -28,14 +28,14 @@ public partial class DashboardView : Page
         await LoadBooksAsync();
         await LoadCategoriesAsync();
     }
-    
+
     // ReSharper disable once AsyncVoidMethod
     private async void CategoryComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         IEnumerable<BookDisplayModel>? books;
         if (_currentUser is null && ContextManager.IsAdmin)
         {
-            books = await _bookService.FilterBooksDisplayAsync((int?) CategoryComboBox.SelectedIndex);
+            books = await _bookService.FilterBooksDisplayAsync((int?)CategoryComboBox.SelectedIndex);
         }
         else if (_currentUser is not null && !ContextManager.IsAdmin)
         {
@@ -56,7 +56,7 @@ public partial class DashboardView : Page
 
         BookGrid.ItemsSource = books;
     }
-    
+
     // ReSharper disable once AsyncVoidMethod
     private async void SearchBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
@@ -69,7 +69,8 @@ public partial class DashboardView : Page
         }
         else if (_currentUser is not null && !ContextManager.IsAdmin)
         {
-            books = await _bookService.SearchBooksDisplayAsync(_currentUser.Id, keyword, CategoryComboBox.SelectedIndex);
+            books = await _bookService.SearchBooksDisplayAsync(_currentUser.Id, keyword,
+                CategoryComboBox.SelectedIndex);
         }
         else
         {
@@ -83,7 +84,7 @@ public partial class DashboardView : Page
             MainWindow.Instance.Navigate(new LoginView());
             return;
         }
-        
+
         BookGrid.ItemsSource = books;
     }
 
@@ -120,8 +121,40 @@ public partial class DashboardView : Page
         List<CategoryDisplayModel> categoryList = new List<CategoryDisplayModel>
             { new CategoryDisplayModel { Id = 0, Name = "All Categories" } };
         categoryList.AddRange(categories);
-        
+
         CategoryComboBox.ItemsSource = categoryList;
         CategoryComboBox.SelectedIndex = 0;
+    }
+
+    private void AddBookBtn_Click(object sender, RoutedEventArgs e)
+    {
+        MainWindow.Instance.Title = "SmartBook - Add Book";
+        MainWindow.Instance.Navigate(new AddBookView());
+    }
+
+    // ReSharper disable once AsyncVoidMethod
+    private async void BookItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.DataContext is BookDisplayModel bookDisplay)
+        {
+            if (ContextManager.CurrentUser is null)
+            {
+                MessageBox.Show("No logged-in user found.");
+                return;
+            }
+
+            var userId = ContextManager.CurrentUser.Id;
+            var userBooks = await BookService.Instance.GetAllUserBooksAsync(userId);
+            var userBook = userBooks.FirstOrDefault(ub => ub.BookId == bookDisplay.BookId);
+
+            if (userBook == null)
+            {
+                MessageBox.Show("Could not find UserBook for the selected book.");
+                return;
+            }
+
+            MainWindow.Instance.Title = $"SmartBook - Edit Book {bookDisplay.Title}";
+            MainWindow.Instance.Navigate(new EditBookView(userBook));
+        }
     }
 }

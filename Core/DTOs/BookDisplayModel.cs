@@ -12,5 +12,11 @@ public class BookDisplayModel
     public bool IsRead { get; set; }
     public int? Rating { get; set; }
 
-    public string? CoverImagePath { get; set; } = ""; 
+    public string? CoverImagePath { get; set; } = "";
+
+    public override string ToString()
+    {
+        return
+            $"{nameof(UserBookId)}: {UserBookId}, {nameof(BookId)}: {BookId}, {nameof(Title)}: {Title}, {nameof(AuthorName)}: {AuthorName}, {nameof(CategoryName)}: {CategoryName}, {nameof(IsRead)}: {IsRead}, {nameof(Rating)}: {Rating}, {nameof(CoverImagePath)}: {CoverImagePath}";
+    }
 }
