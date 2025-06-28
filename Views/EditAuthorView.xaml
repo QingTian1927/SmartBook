@@ -1,0 +1,52 @@
+﻿<Page x:Class="SmartBook.Views.EditAuthorView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Title="EditAuthorView"
+      Loaded="Page_Loaded">
+
+    <Grid Background="White">
+        <!-- Back Button -->
+        <Button Content="← Back" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Margin="20" 
+                Width="80"
+                Click="BackButton_Click" />
+
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
+            <TextBlock Text="Author Management" FontSize="20" FontWeight="Bold" Margin="0 0 0 20" TextAlignment="Center" />
+
+            <!-- Add New Author -->
+            <GroupBox Header="Add New Author" Margin="0 0 0 30">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Name:" />
+                    <TextBox x:Name="NewAuthorNameBox" Margin="0 0 0 10" />
+
+                    <TextBlock Text="Bio (optional):" />
+                    <TextBox x:Name="NewAuthorBioBox" AcceptsReturn="True" Height="60" TextWrapping="Wrap" />
+
+                    <Button Content="Add Author" Width="120" HorizontalAlignment="Right" Click="AddAuthorButton_Click" Margin="0 10 0 0" />
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Request Author Edit -->
+            <GroupBox Header="Request Author Edit">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Select Existing Author:" />
+                    <ComboBox x:Name="AuthorComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Margin="0 0 0 10" />
+
+                    <TextBlock Text="New Name (if any):" />
+                    <TextBox x:Name="EditRequestNameBox" Margin="0 0 0 10" />
+
+                    <TextBlock Text="New Bio (if any):" />
+                    <TextBox x:Name="EditRequestBioBox" AcceptsReturn="True" Height="60" TextWrapping="Wrap" />
+
+                    <Button Content="Submit Request (Not Implemented)" Width="220" HorizontalAlignment="Right" Click="SubmitRequestButton_Click" />
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </Grid>
+</Page>

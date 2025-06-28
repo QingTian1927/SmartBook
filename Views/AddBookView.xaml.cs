@@ -106,12 +106,14 @@ public partial class AddBookView : Page
 
     private void AddAuthorButton_Click(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        MainWindow.Instance.Title = "SmartBook - Add Author";
+        MainWindow.Instance.Navigate(new EditAuthorView());
     }
 
     private void AddCategoryButton_Click(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        MainWindow.Instance.Title = "SmartBook - Add Category";
+        MainWindow.Instance.Navigate(new EditCategoryView());
     }
 
     // ReSharper disable once AsyncVoidMethod
