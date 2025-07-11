@@ -44,7 +44,7 @@
                     <TextBlock Text="New Bio (if any):" />
                     <TextBox x:Name="EditRequestBioBox" AcceptsReturn="True" Height="60" TextWrapping="Wrap" />
 
-                    <Button Content="Submit Request (Not Implemented)" Width="220" HorizontalAlignment="Right" Click="SubmitRequestButton_Click" />
+                    <Button Content="Submit Request" Width="220" HorizontalAlignment="Right" Click="SubmitRequestButton_Click" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>
