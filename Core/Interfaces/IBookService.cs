@@ -36,9 +36,25 @@ namespace SmartBook.Core.Interfaces
         Task<IEnumerable<BookDisplayModel>> GetAllBooksDisplayAsync(int userId);
 
         Task<IEnumerable<CategoryDisplayModel>> GetAllCategoriesAsync();
+        Task<IEnumerable<CategoryDisplayModel>> GetAllCategoriesAsync(int? userId);
         Task<IEnumerable<AuthorDisplayModel>> GetAllAuthorsAsync();
 
         Task<Author?> GetAuthorByIdAsync(int authorId);
         Task<Category?> GetCategoryByIdAsync(int categoryId);
+
+        Task<List<UserBook>> GetAllUserBooksAsync(int userId);
+
+        Task UpdateUserBookAsync(UserBook userBook);
+
+        Task DeleteUserBookAsync(int userBookId);
+
+        Task<bool> TryAddCategoryAsync(string name);
+
+        Task<bool> SubmitCategoryEditRequestAsync(int categoryId, string proposedName);
+        
+        Task<bool> TryAddAuthorAsync(string name, string? bio);
+        
+        Task<bool> SubmitAuthorEditRequestAsync(int authorId, string? proposedName, string? proposedBio);
+
     }
 }

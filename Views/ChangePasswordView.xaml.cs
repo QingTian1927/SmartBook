@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SmartBook.Core.Data;
 using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
@@ -9,11 +10,12 @@ namespace SmartBook.Views;
 
 public partial class ChangePasswordView : Page
 {
-    private readonly IAuthService _authService = AuthService.Instance;
+    private readonly IAuthService _authService;
     
     public ChangePasswordView()
     {
         InitializeComponent();
+        _authService = App.AppHost.Services.GetRequiredService<IAuthService>();
     }
 
     private async void ChangePassword_Click(object sender, RoutedEventArgs e)

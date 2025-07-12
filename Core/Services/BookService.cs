@@ -8,21 +8,11 @@ namespace SmartBook.Core.Services;
 
 public class BookService : IBookService
 {
-    private readonly SmartBookDbContext _db = ContextManager.Context;
+    private readonly SmartBookDbContext _db;
 
-    private static BookService? _instance;
-
-    public static BookService Instance
+    public BookService(SmartBookDbContext db)
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new BookService();
-            }
-
-            return _instance;
-        }
+        _db = db;
     }
 
     public async Task<IEnumerable<Book>> GetAllBooksAsync(int userId)
@@ -31,10 +21,9 @@ public class BookService : IBookService
             .Where(ub => ub.UserId == userId)
             .Include(ub => ub.Book)
             .ThenInclude(b => b.Author)
-            .Include(ub => ub.Book)
-            .ThenInclude(b => b.Category)
+            .Include(ub => ub.Book.Category)
             .Select(ub => ub.Book)
-            .Distinct() // In case user has multiple UserBook entries per Book (if ever)
+            .Distinct()
             .ToListAsync();
     }
 
@@ -61,16 +50,14 @@ public class BookService : IBookService
     public async Task DeleteBookAsync(int bookId)
     {
         var book = await _db.Books
-            .Include(b => b.UserBooks) // Ensure related data is loaded
+            .Include(b => b.UserBooks)
             .FirstOrDefaultAsync(b => b.Id == bookId);
 
         if (book != null)
         {
-            // Remove all associated UserBooks first
             var relatedUserBooks = _db.UserBooks.Where(ub => ub.BookId == bookId);
             _db.UserBooks.RemoveRange(relatedUserBooks);
 
-            // Now remove the book
             _db.Books.Remove(book);
             await _db.SaveChangesAsync();
         }
@@ -88,7 +75,7 @@ public class BookService : IBookService
             .Where(ub => ub.BookId == bookId)
             .AsQueryable();
 
-        return (int?) await query
+        return (int?)await query
             .AverageAsync(ub => ub.Rating);
     }
 
@@ -98,8 +85,7 @@ public class BookService : IBookService
             .Where(ub => ub.UserId == userId)
             .Include(ub => ub.Book)
             .ThenInclude(b => b.Author)
-            .Include(ub => ub.Book)
-            .ThenInclude(b => b.Category)
+            .Include(ub => ub.Book.Category)
             .AsQueryable();
 
         if (categoryId.HasValue)
@@ -165,13 +151,12 @@ public class BookService : IBookService
         {
             return await GetAllBooksDisplayAsync(userId);
         }
-        
+
         var query = _db.UserBooks
             .Where(ub => ub.UserId == userId)
             .Include(ub => ub.Book)
             .ThenInclude(b => b.Author)
-            .Include(ub => ub.Book)
-            .ThenInclude(b => b.Category)
+            .Include(ub => ub.Book.Category)
             .AsQueryable();
 
         if (categoryId.HasValue)
@@ -194,7 +179,7 @@ public class BookService : IBookService
                 Rating = ub.Rating,
                 Title = ub.Book.Title,
                 UserBookId = ub.BookId,
-                CoverImagePath = "" // TODO: Add cover image path here if needed
+                CoverImagePath = ""
             })
             .Distinct()
             .ToListAsync();
@@ -242,19 +227,19 @@ public class BookService : IBookService
         return result;
     }
 
-    public async Task<IEnumerable<BookDisplayModel>> SearchBooksDisplayAsync(int userId, string? keyword, int? categoryId = null, bool? isRead = null)
+    public async Task<IEnumerable<BookDisplayModel>> SearchBooksDisplayAsync(int userId, string? keyword,
+        int? categoryId = null, bool? isRead = null)
     {
         if (string.IsNullOrEmpty(keyword))
         {
             return await FilterBooksDisplayAsync(userId, categoryId, isRead);
         }
-        
+
         var query = _db.UserBooks
             .Where(ub => ub.UserId == userId)
             .Include(ub => ub.Book)
             .ThenInclude(b => b.Author)
-            .Include(ub => ub.Book)
-            .ThenInclude(b => b.Category)
+            .Include(ub => ub.Book.Category)
             .AsQueryable();
 
         if (categoryId.HasValue && categoryId != 0)
@@ -263,7 +248,7 @@ public class BookService : IBookService
         }
 
         query = query.Where(ub => ub.Book.Title.ToLower().Contains(keyword.ToLower()));
-        
+
         return await query
             .Select(ub => new BookDisplayModel
             {
@@ -274,7 +259,7 @@ public class BookService : IBookService
                 Rating = ub.Rating,
                 Title = ub.Book.Title,
                 UserBookId = ub.BookId,
-                CoverImagePath = "" // TODO: Add cover image path here if needed
+                CoverImagePath = ""
             })
             .Distinct()
             .ToListAsync();
@@ -286,7 +271,7 @@ public class BookService : IBookService
             .Include(b => b.Author)
             .Include(b => b.Category)
             .ToListAsync();
-        
+
         return books.Select(b => new BookDisplayModel
         {
             UserBookId = b.Id,
@@ -296,7 +281,7 @@ public class BookService : IBookService
             CategoryName = b.Category.Name,
             IsRead = false,
             Rating = -1,
-            CoverImagePath = "" // TODO: Add cover image path here if needed
+            CoverImagePath = ""
         }).ToList();
     }
 
@@ -304,8 +289,9 @@ public class BookService : IBookService
     {
         var userBooks = await _db.UserBooks
             .Where(ub => ub.UserId == userId)
-            .Include(ub => ub.Book).ThenInclude(b => b.Author)
-            .Include(ub => ub.Book).ThenInclude(b => b.Category)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Author)
+            .Include(ub => ub.Book.Category)
             .ToListAsync();
 
         return userBooks.Select(ub => new BookDisplayModel
@@ -317,7 +303,7 @@ public class BookService : IBookService
             CategoryName = ub.Book.Category.Name,
             IsRead = ub.IsRead,
             Rating = ub.Rating,
-            CoverImagePath = "" // TODO: Add cover image path here if needed
+            CoverImagePath = ""
         }).ToList();
     }
 
@@ -333,17 +319,37 @@ public class BookService : IBookService
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<CategoryDisplayModel>> GetAllCategoriesAsync(int? userId)
+    {
+        if (!userId.HasValue)
+        {
+            return new List<CategoryDisplayModel>();
+        }
+
+        return await _db.UserBooks
+            .Where(ub => ub.UserId == userId)
+            .Select(ub => ub.Book.Category)
+            .Distinct()
+            .Select(c => new CategoryDisplayModel
+            {
+                Id = c.Id,
+                Name = c.Name
+            })
+            .OrderBy(c => c.Name)
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<AuthorDisplayModel>> GetAllAuthorsAsync()
     {
         return await _db.Authors.Select(a => new AuthorDisplayModel()
-        {
-            Id = a.Id,
-            Name = a.Name,
-            Bio = a.Bio
-        })
-        .OrderBy(a => a.Name)
-        .Distinct()
-        .ToListAsync();
+            {
+                Id = a.Id,
+                Name = a.Name,
+                Bio = a.Bio
+            })
+            .OrderBy(a => a.Name)
+            .Distinct()
+            .ToListAsync();
     }
 
     public async Task<Author?> GetAuthorByIdAsync(int authorId)
@@ -355,20 +361,25 @@ public class BookService : IBookService
     {
         return await _db.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
     }
-    
+
     public async Task<List<UserBook>> GetAllUserBooksAsync(int userId)
     {
-        return await _db.UserBooks
+        using var db = new SmartBookDbContext();
+        return await db.UserBooks
             .Where(ub => ub.UserId == userId)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Author)
+            .Include(ub => ub.Book.Category)
             .ToListAsync();
     }
+
 
     public async Task UpdateUserBookAsync(UserBook userBook)
     {
         _db.UserBooks.Update(userBook);
         await _db.SaveChangesAsync();
     }
-    
+
     public async Task DeleteUserBookAsync(int userBookId)
     {
         var userBook = await _db.UserBooks.FindAsync(userBookId);
@@ -377,5 +388,77 @@ public class BookService : IBookService
             _db.UserBooks.Remove(userBook);
             await _db.SaveChangesAsync();
         }
+    }
+
+    public async Task<bool> TryAddCategoryAsync(string name)
+    {
+        var nameLower = name.ToLower();
+        var exists = await _db.Categories.AnyAsync(c => c.Name.ToLower() == nameLower);
+        if (exists)
+            return false;
+
+        _db.Categories.Add(new Category { Name = name });
+        await _db.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> SubmitCategoryEditRequestAsync(int categoryId, string proposedName)
+    {
+        var user = ContextManager.CurrentUser;
+        if (user == null)
+            return false;
+
+        var request = new CategoryEditRequest
+        {
+            CategoryId = categoryId,
+            ProposedName = proposedName,
+            RequestedByUserId = user.Id,
+            RequestedAt = DateTime.UtcNow,
+            Status = "Pending"
+        };
+
+        await _db.CategoryEditRequests.AddAsync(request);
+        await _db.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> TryAddAuthorAsync(string name, string? bio)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return false;
+
+        var author = new Author
+        {
+            Name = name.Trim(),
+            Bio = string.IsNullOrWhiteSpace(bio) ? null : bio.Trim()
+        };
+
+        _db.Authors.Add(author);
+        await _db.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> SubmitAuthorEditRequestAsync(int authorId, string? proposedName, string? proposedBio)
+    {
+        var currentUser = ContextManager.CurrentUser;
+        if (currentUser == null)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(proposedName) && string.IsNullOrWhiteSpace(proposedBio))
+            return false;
+
+        var request = new AuthorEditRequest
+        {
+            AuthorId = authorId,
+            ProposedName = string.IsNullOrWhiteSpace(proposedName) ? null : proposedName.Trim(),
+            ProposedBio = string.IsNullOrWhiteSpace(proposedBio) ? null : proposedBio.Trim(),
+            RequestedByUserId = currentUser.Id,
+            RequestedAt = DateTime.UtcNow,
+            Status = "Pending"
+        };
+
+        _db.AuthorEditRequests.Add(request);
+        await _db.SaveChangesAsync();
+        return true;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SmartBook.Core.Data;
 using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
@@ -11,12 +12,13 @@ namespace SmartBook.Views;
 
 public partial class ForgotPasswordView : Page
 {
-    private readonly IAuthService _authService = AuthService.Instance;
+    private readonly IAuthService _authService;
     private readonly IEmailService _emailService = EmailService.Instance;
 
     public ForgotPasswordView()
     {
         InitializeComponent();
+        _authService = App.AppHost.Services.GetRequiredService<IAuthService>();
     }
 
     private void LoginLink_Click(object sender, RoutedEventArgs e)

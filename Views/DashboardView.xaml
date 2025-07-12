@@ -29,14 +29,33 @@
             <!-- Header Filters -->
             <WrapPanel Grid.Row="0" Margin="20" VerticalAlignment="Center">
                 <TextBlock Text="Category:" VerticalAlignment="Center" Margin="0 0 5 0" />
-                <ComboBox x:Name="CategoryComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Width="150" Margin="0 0 20 0" SelectionChanged="CategoryComboBox_OnSelectionChanged" />
+                <ComboBox x:Name="CategoryComboBox" DisplayMemberPath="Name" SelectedValuePath="Id" Width="150"
+                          Margin="0 0 20 0" SelectionChanged="CategoryComboBox_OnSelectionChanged" />
                 <TextBlock Text="Search:" VerticalAlignment="Center" Margin="0 0 5 0" />
-                <TextBox x:Name="SearchBox" TextChanged="SearchBox_OnTextChanged"  Width="200" Margin="0 0 20 0" />
-                <Button Content="Add Book" Click="AddBookBtn_Click" Background="#1E2D40" Foreground="White" Padding="8,4" FontWeight="Bold" />
+                <TextBox x:Name="SearchBox" TextChanged="SearchBox_OnTextChanged" Width="200" Margin="0 0 20 0" />
+
+                <!-- Read Filter -->
+                <TextBlock Text="Read Status:" VerticalAlignment="Center" Margin="0 0 5 0" />
+                <ComboBox x:Name="ReadStatusComboBox" Width="120" Margin="0 0 20 0"
+                          SelectionChanged="FilterComboBox_Changed">
+                    <ComboBoxItem Content="All" IsSelected="True" />
+                    <ComboBoxItem Content="Read" />
+                    <ComboBoxItem Content="Unread" />
+                </ComboBox>
+
+                <!-- Rating Filter -->
+                <TextBlock Text="Rating:" VerticalAlignment="Center" Margin="0 0 5 0" />
+                <TextBox x:Name="MinRatingBox" Width="30" Margin="0 0 5 0" />
+                <TextBlock Text="to" VerticalAlignment="Center" Margin="0 0 5 0" />
+                <TextBox x:Name="MaxRatingBox" Width="30" Margin="0 0 20 0" />
+                
+                <Button Content="Add Book" Click="AddBookBtn_Click" Background="#1E2D40" Foreground="White"
+                        Padding="8,4" FontWeight="Bold" />
             </WrapPanel>
 
             <!-- Book Grid -->
-            <ScrollViewer Grid.Row="1" Margin="20" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" Margin="20" HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="BookGrid">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -55,7 +74,8 @@
                                         BorderThickness="1" CornerRadius="6">
                                     <StackPanel>
                                         <Image Source="{Binding CoverImagePath}" Height="180" Stretch="UniformToFill" />
-                                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="12" Margin="5 2 5 0"
+                                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="12"
+                                                   Margin="5 2 5 0"
                                                    TextWrapping="Wrap" TextAlignment="Center" />
                                         <TextBlock Text="{Binding AuthorName}" FontSize="10" Foreground="Gray"
                                                    Margin="5 0 5 0" TextAlignment="Center" />

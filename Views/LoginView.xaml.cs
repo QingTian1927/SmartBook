@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SmartBook.Core.Data;
 using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
@@ -11,12 +12,13 @@ namespace SmartBook.Views;
 
 public partial class LoginView : Page
 {
-    private readonly IAuthService _authService = AuthService.Instance;
+    private readonly IAuthService _authService;
     private readonly IConfiguration _configuration = ContextManager.Configuration;
 
     public LoginView()
     {
         InitializeComponent();
+        _authService = App.AppHost.Services.GetRequiredService<IAuthService>();
     }
 
     private async Task<bool> AuthenticateNormalUser(string email, string password)

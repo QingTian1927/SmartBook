@@ -1,20 +1,23 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SmartBook.Core.Data;
 using SmartBook.Core.Services;
 using SmartBook.Core.DTOs;
+using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
 
 namespace SmartBook.Views;
 
 public partial class EditAuthorView : Page
 {
-    private readonly BookService _bookService = BookService.Instance;
+    private readonly IBookService _bookService;
     private readonly Page? _returnPage;
 
     public EditAuthorView(Page? returnPage = null)
     {
         InitializeComponent();
+        _bookService = App.AppHost.Services.GetRequiredService<IBookService>();
         _returnPage = returnPage;
     }
 
@@ -36,14 +39,12 @@ public partial class EditAuthorView : Page
             return;
         }
 
-        var author = new SmartBook.Core.Models.Author
+        var success = await _bookService.TryAddAuthorAsync(name, bio);
+        if (!success)
         {
-            Name = name,
-            Bio = string.IsNullOrWhiteSpace(bio) ? null : bio
-        };
-
-        await ContextManager.Context.Authors.AddAsync(author);
-        await ContextManager.Context.SaveChangesAsync();
+            MessageBox.Show("Failed to add author.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
 
         MessageBox.Show("Author added successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         MainWindow.Instance.Navigate(new DashboardView());
@@ -68,31 +69,18 @@ public partial class EditAuthorView : Page
             return;
         }
 
-        var currentUser = ContextManager.CurrentUser;
-        if (currentUser == null)
+        var success = await _bookService.SubmitAuthorEditRequestAsync(selectedAuthor.Id, proposedName, proposedBio);
+        if (!success)
         {
-            MessageBox.Show("You must be logged in to submit an edit request.", "Authentication Error",
-                MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show("Failed to submit edit request. Make sure you're logged in.", "Error", MessageBoxButton.OK,
+                MessageBoxImage.Error);
             return;
         }
-
-        var request = new AuthorEditRequest
-        {
-            AuthorId = selectedAuthor.Id,
-            ProposedName = string.IsNullOrWhiteSpace(proposedName) ? null : proposedName,
-            ProposedBio = string.IsNullOrWhiteSpace(proposedBio) ? null : proposedBio,
-            RequestedByUserId = currentUser.Id,
-            RequestedAt = DateTime.UtcNow,
-            Status = "Pending"
-        };
-
-        await ContextManager.Context.AuthorEditRequests.AddAsync(request);
-        await ContextManager.Context.SaveChangesAsync();
 
         MessageBox.Show("Edit request submitted successfully.", "Success", MessageBoxButton.OK,
             MessageBoxImage.Information);
 
-        // Optionally reset the form
+        // Reset form
         AuthorComboBox.SelectedItem = null;
         EditRequestNameBox.Text = string.Empty;
         EditRequestBioBox.Text = string.Empty;

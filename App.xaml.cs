@@ -1,6 +1,11 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using SmartBook.Core.Data;
+using SmartBook.Core.Interfaces;
+using SmartBook.Core.Services;
 
 namespace SmartBook
 {
@@ -9,11 +14,34 @@ namespace SmartBook
     /// </summary>
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
+        public static IHost AppHost { get; private set; }
+        
+        public App()
         {
+            AppHost = Host.CreateDefaultBuilder()
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddDbContext<SmartBookDbContext>();
+                    services.AddSingleton<IBookService, BookService>();
+                    services.AddSingleton<IAuthService, AuthService>();
+                })
+                .Build();
+        }
+        
+        protected override async void OnStartup(StartupEventArgs e)
+        {
+            await AppHost.StartAsync();
             base.OnStartup(e);
             DotNetEnv.Env.Load();
         }
+        
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            using (AppHost)
+            {
+                await AppHost.StopAsync(TimeSpan.FromSeconds(5));
+            }
+            base.OnExit(e);
+        }
     }
-
 }

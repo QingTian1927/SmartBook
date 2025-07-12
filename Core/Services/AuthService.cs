@@ -8,21 +8,11 @@ namespace SmartBook.Core.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly SmartBookDbContext _db = ContextManager.Context;
+    private readonly SmartBookDbContext _db;
 
-    private static AuthService? _instance;
-
-    public static AuthService Instance
+    public AuthService(SmartBookDbContext db)
     {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new AuthService();
-            }
-
-            return _instance;
-        }
+        _db = db;
     }
 
     public static bool IsMatchingPassword(string password, string passwordHash)

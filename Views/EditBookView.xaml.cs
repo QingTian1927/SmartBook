@@ -2,22 +2,25 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SmartBook.Core.Data;
 using SmartBook.Core.Models;
 using SmartBook.Core.Services;
 using SmartBook.Core.DTOs;
+using SmartBook.Core.Interfaces;
 
 namespace SmartBook.Views
 {
     public partial class EditBookView : Page
     {
-        private readonly BookService _bookService = BookService.Instance;
+        private readonly IBookService _bookService;
         private readonly UserBook _userBook;
         private Book _book;
 
         public EditBookView(UserBook userBook)
         {
             InitializeComponent();
+            _bookService = App.AppHost.Services.GetRequiredService<IBookService>();
             _userBook = userBook;
             _book = userBook.Book;
         }

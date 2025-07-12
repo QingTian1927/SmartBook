@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
 using SmartBook.Core.Services;
@@ -10,11 +11,12 @@ namespace SmartBook.Views;
 public partial class SignUpView : Page
 {
     private readonly IEmailService _emailService = EmailService.Instance;
-    private readonly IAuthService _authService = AuthService.Instance;
+    private readonly IAuthService _authService;
 
     public SignUpView()
     {
         InitializeComponent();
+        _authService = App.AppHost.Services.GetRequiredService<IAuthService>();
     }
 
     // ReSharper disable once AsyncVoidMethod

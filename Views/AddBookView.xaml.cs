@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using SmartBook.Core.Data;
 using SmartBook.Core.DTOs;
+using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
 using SmartBook.Core.Services;
 
@@ -10,12 +12,14 @@ namespace SmartBook.Views;
 
 public partial class AddBookView : Page
 {
-    private readonly BookService _bookService = BookService.Instance;
-    private readonly AuthService _authService = AuthService.Instance;
+    private readonly IBookService _bookService;
+    private readonly IAuthService _authService;
 
     public AddBookView()
     {
         InitializeComponent();
+        _bookService = App.AppHost.Services.GetRequiredService<IBookService>();
+        _authService = App.AppHost.Services.GetRequiredService<IAuthService>();
     }
 
     // ReSharper disable once AsyncVoidMethod

@@ -7,21 +7,6 @@ namespace SmartBook.Core.Data;
 
 public static class ContextManager
 {
-    private static SmartBookDbContext? _context;
-
-    public static SmartBookDbContext Context
-    {
-        get
-        {
-            if (_context == null)
-            {
-                _context = new SmartBookDbContext();
-            }
-
-            return _context;
-        }
-    }
-
     public static IConfiguration Configuration
     {
         get
