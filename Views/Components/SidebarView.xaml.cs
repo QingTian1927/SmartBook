@@ -42,7 +42,8 @@ public partial class SidebarView : UserControl
 
     private void RecommendationBtn_Click(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        MainWindow.Instance.Title = "SmartBook - Recommendations";
+        MainWindow.Instance.Navigate(new RecommendationView());
     }
 
     private void HistoryBtn_Click(object sender, RoutedEventArgs e)
