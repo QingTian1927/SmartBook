@@ -15,5 +15,8 @@ namespace SmartBook.Core.Interfaces
         
         // Generates recommendations based on collaborative filtering, considering similar users' reading habits.
         Task<List<BookDisplayModel>> GetCollaborativeRecommendationsAsync(int userId, int maxCount = 10);
+
+        // Fetches recommendations from Gemini AI based on the user's reading history and preferences.
+        Task<List<BookDisplayModel>> GetGeminiRecommendationsAsync(int userId);
     }
 }

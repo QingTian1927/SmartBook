@@ -9,10 +9,12 @@ namespace SmartBook.Core.Services;
 public class RecommendationService : IRecommendationService
 {
     private readonly SmartBookDbContext _db;
+    private readonly GeminiService _geminiService;
 
     public RecommendationService(SmartBookDbContext db)
     {
         _db = db;
+        _geminiService = new GeminiService();
     }
 
     public async Task<List<BookDisplayModel>> GetContentBasedRecommendationsAsync(int userId, int maxCount = 10)
@@ -107,6 +109,51 @@ public class RecommendationService : IRecommendationService
             CoverImagePath = "Assets/BookPlaceholder.png",
             Reason = "Because readers similar to you liked this"
         }).ToList();
+
+        return result;
+    }
+
+    public async Task<List<BookDisplayModel>> GetGeminiRecommendationsAsync(int userId)
+    {
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null) return new();
+
+        // TODO: Limit the number of books for performance
+        var userBooks = await _db.UserBooks
+            .Where(ub => ub.UserId == userId)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Author)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Category)
+            .ToListAsync();
+
+        var allBooks = await _db.Books
+            .Include(b => b.Author)
+            .Include(b => b.Category)
+            .ToListAsync();
+
+        var recommendations = await _geminiService.GetRecommendationsFromGeminiAsync(user, userBooks, allBooks);
+        var candidateDict = allBooks.ToDictionary(b => b.Id);
+
+        var result = new List<BookDisplayModel>();
+        foreach (var rec in recommendations)
+        {
+            if (candidateDict.TryGetValue(rec.BookId, out var book))
+            {
+                result.Add(new BookDisplayModel
+                {
+                    BookId = book.Id,
+                    Title = book.Title,
+                    AuthorName = book.Author.Name,
+                    CategoryName = book.Category.Name,
+                    CoverImagePath = "Assets/BookPlaceholder.png",
+                    Reason = rec.Reason,
+                    Description = string.IsNullOrWhiteSpace(rec.Description)
+                        ? "No description available. Let the story surprise you!"
+                        : rec.Description
+                });
+            }
+        }
 
         return result;
     }

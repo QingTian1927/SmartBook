@@ -15,6 +15,7 @@ public class BookDisplayModel
     public string? CoverImagePath { get; set; } = "";
 
     public string? Reason { get; set; } = ""; // 🆕 New property to explain why the book is recommended
+    public string? Description { get; set; }
 
     public override string ToString()
     {
@@ -22,6 +23,7 @@ public class BookDisplayModel
             $"{nameof(UserBookId)}: {UserBookId}, {nameof(BookId)}: {BookId}, {nameof(Title)}: {Title}, " +
             $"{nameof(AuthorName)}: {AuthorName}, {nameof(CategoryName)}: {CategoryName}, " +
             $"{nameof(IsRead)}: {IsRead}, {nameof(Rating)}: {Rating}, {nameof(CoverImagePath)}: {CoverImagePath}, " +
-            $"{nameof(Reason)}: {Reason}";
+            $"{nameof(Reason)}: {Reason}" +
+            $"{nameof(Description)}: {Description}";
     }
 }
