@@ -48,7 +48,7 @@
                 <TextBox x:Name="MinRatingBox" Width="30" Margin="0 0 5 0" />
                 <TextBlock Text="to" VerticalAlignment="Center" Margin="0 0 5 0" />
                 <TextBox x:Name="MaxRatingBox" Width="30" Margin="0 0 20 0" />
-                
+
                 <Button Content="Add Book" Click="AddBookBtn_Click" Background="#1E2D40" Foreground="White"
                         Padding="8,4" FontWeight="Bold" />
             </WrapPanel>
@@ -64,32 +64,49 @@
                     </ItemsControl.ItemsPanel>
 
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Click="BookItem_Click"
-                                    Padding="0"
-                                    BorderThickness="0"
-                                    Background="Transparent"
-                                    Cursor="Hand">
-                                <Border Width="160" Height="280" Margin="10" Background="#F9F9F9" BorderBrush="#DDD"
-                                        BorderThickness="1" CornerRadius="6">
-                                    <StackPanel>
-                                        <Image Source="{Binding CoverImagePath}" Height="180" Stretch="UniformToFill" />
-                                        <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="12"
-                                                   Margin="5 2 5 0"
-                                                   TextWrapping="Wrap" TextAlignment="Center" />
-                                        <TextBlock Text="{Binding AuthorName}" FontSize="10" Foreground="Gray"
-                                                   Margin="5 0 5 0" TextAlignment="Center" />
-                                        <TextBlock Text="{Binding CategoryName}" FontSize="10" Foreground="DarkGray"
-                                                   Margin="5 0 5 0" TextAlignment="Center" />
-                                        <TextBlock Text="{Binding IsRead, StringFormat=Read: {0}}" FontSize="10"
-                                                   Margin="5 0 5 0" TextAlignment="Center" />
-                                        <TextBlock Text="{Binding Rating, StringFormat=Rating: {0}}" FontSize="10"
-                                                   Margin="5 0 5 0" TextAlignment="Center" />
-                                    </StackPanel>
-                                </Border>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+    <DataTemplate>
+        <Button Click="BookItem_Click"
+                Padding="0"
+                BorderThickness="0"
+                Background="Transparent"
+                Cursor="Hand">
+            <Border Width="160" Height="280" Margin="10" Background="#F9F9F9" BorderBrush="#DDD"
+                    BorderThickness="1" CornerRadius="6">
+                <StackPanel>
+                    <Image Source="{Binding CoverImagePath}" Height="180" Stretch="UniformToFill" />
+                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="12"
+                               Margin="5 2 5 0"
+                               TextWrapping="Wrap" TextAlignment="Center" />
+                    <TextBlock Text="{Binding AuthorName}" FontSize="10" Foreground="Gray"
+                               Margin="5 0 5 0" TextAlignment="Center" />
+                    <TextBlock Text="{Binding CategoryName}" FontSize="10" Foreground="DarkGray"
+                               Margin="5 0 5 0" TextAlignment="Center" />
+
+                    <!-- Read Status: icon + label -->
+                    <TextBlock FontSize="10" Margin="5 0 5 0" TextAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="❌ Unread" />
+                                <Setter Property="Foreground" Value="Crimson" />
+                                <Setter Property="FontWeight" Value="Bold" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsRead}" Value="True">
+                                        <Setter Property="Text" Value="✅ Read" />
+                                        <Setter Property="Foreground" Value="ForestGreen" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <TextBlock Text="{Binding Rating, StringFormat=Rating: {0}}" FontSize="10"
+                               Margin="5 0 5 0" TextAlignment="Center" />
+                </StackPanel>
+            </Border>
+        </Button>
+    </DataTemplate>
+</ItemsControl.ItemTemplate>
+
                 </ItemsControl>
             </ScrollViewer>
         </Grid>
