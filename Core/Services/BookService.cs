@@ -15,95 +15,6 @@ public class BookService : IBookService
         _db = db;
     }
 
-    public async Task<IEnumerable<Book>> GetAllBooksAsync(int userId)
-    {
-        return await _db.UserBooks
-            .Where(ub => ub.UserId == userId)
-            .Include(ub => ub.Book)
-            .ThenInclude(b => b.Author)
-            .Include(ub => ub.Book.Category)
-            .Select(ub => ub.Book)
-            .Distinct()
-            .ToListAsync();
-    }
-
-    public async Task<Book?> GetBookByIdAsync(int bookId)
-    {
-        return await _db.Books
-            .Include(b => b.Author)
-            .Include(b => b.Category)
-            .FirstOrDefaultAsync(b => b.Id == bookId);
-    }
-
-    public async Task AddBookAsync(Book book)
-    {
-        _db.Books.Add(book);
-        await _db.SaveChangesAsync();
-    }
-
-    public async Task UpdateBookAsync(Book book)
-    {
-        _db.Books.Update(book);
-        await _db.SaveChangesAsync();
-    }
-
-    public async Task DeleteBookAsync(int bookId)
-    {
-        var book = await _db.Books
-            .Include(b => b.UserBooks)
-            .FirstOrDefaultAsync(b => b.Id == bookId);
-
-        if (book != null)
-        {
-            var relatedUserBooks = _db.UserBooks.Where(ub => ub.BookId == bookId);
-            _db.UserBooks.RemoveRange(relatedUserBooks);
-
-            _db.Books.Remove(book);
-            await _db.SaveChangesAsync();
-        }
-    }
-
-    public async Task AddUserBookAsync(UserBook userBook)
-    {
-        _db.UserBooks.Add(userBook);
-        await _db.SaveChangesAsync();
-    }
-
-    public async Task<int?> CalculateAverageRatingAsync(int bookId)
-    {
-        var query = _db.UserBooks
-            .Where(ub => ub.BookId == bookId)
-            .AsQueryable();
-
-        return (int?)await query
-            .AverageAsync(ub => ub.Rating);
-    }
-
-    public async Task<IEnumerable<Book>> FilterBooksAsync(int userId, int? categoryId = null, bool? isRead = null)
-    {
-        var query = _db.UserBooks
-            .Where(ub => ub.UserId == userId)
-            .Include(ub => ub.Book)
-            .ThenInclude(b => b.Author)
-            .Include(ub => ub.Book.Category)
-            .AsQueryable();
-
-        if (categoryId.HasValue)
-        {
-            query = query.Where(ub => ub.Book.Category.Id == categoryId);
-        }
-
-        if (isRead.HasValue)
-        {
-            query = query.Where(ub => ub.IsRead == isRead.Value);
-        }
-
-        return await query
-            .Select(ub => ub.Book)
-            .Distinct()
-            .ToListAsync();
-    }
-
     public async Task<IEnumerable<BookDisplayModel>> FilterBooksDisplayAsync(int? categoryId = null)
     {
         if (categoryId is 0)
@@ -362,24 +273,6 @@ public class BookService : IBookService
         return await _db.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
     }
 
-    public async Task<List<UserBook>> GetAllUserBooksAsync(int userId)
-    {
-        using var db = new SmartBookDbContext();
-        return await db.UserBooks
-            .Where(ub => ub.UserId == userId)
-            .Include(ub => ub.Book)
-            .ThenInclude(b => b.Author)
-            .Include(ub => ub.Book.Category)
-            .ToListAsync();
-    }
-
-
-    public async Task UpdateUserBookAsync(UserBook userBook)
-    {
-        _db.UserBooks.Update(userBook);
-        await _db.SaveChangesAsync();
-    }
-
     public async Task DeleteUserBookAsync(int userBookId)
     {
         var userBook = await _db.UserBooks.FindAsync(userBookId);
@@ -460,5 +353,118 @@ public class BookService : IBookService
         _db.AuthorEditRequests.Add(request);
         await _db.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<IEnumerable<Book>> GetAllBooksAsync(int userId)
+    {
+        return await _db.UserBooks
+            .Where(ub => ub.UserId == userId)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Author)
+            .Include(ub => ub.Book.Category)
+            .Select(ub => ub.Book)
+            .Distinct()
+            .ToListAsync();
+    }
+
+    public async Task<Book?> GetBookByIdAsync(int bookId)
+    {
+        return await _db.Books
+            .Include(b => b.Author)
+            .Include(b => b.Category)
+            .FirstOrDefaultAsync(b => b.Id == bookId);
+    }
+
+    public async Task AddBookAsync(Book book)
+    {
+        _db.Books.Add(book);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task UpdateBookAsync(Book book)
+    {
+        var existing = await _db.Books.FindAsync(book.Id);
+        if (existing != null)
+        {
+            _db.Entry(existing).CurrentValues.SetValues(book);
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public async Task DeleteBookAsync(int bookId)
+    {
+        var book = await _db.Books
+            .Include(b => b.UserBooks)
+            .FirstOrDefaultAsync(b => b.Id == bookId);
+
+        if (book != null)
+        {
+            var relatedUserBooks = _db.UserBooks.Where(ub => ub.BookId == bookId);
+            _db.UserBooks.RemoveRange(relatedUserBooks);
+
+            _db.Books.Remove(book);
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public async Task AddUserBookAsync(UserBook userBook)
+    {
+        _db.UserBooks.Add(userBook);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task<int?> CalculateAverageRatingAsync(int bookId)
+    {
+        var query = _db.UserBooks
+            .Where(ub => ub.BookId == bookId)
+            .AsQueryable();
+
+        return (int?)await query
+            .AverageAsync(ub => ub.Rating);
+    }
+
+    public async Task<IEnumerable<Book>> FilterBooksAsync(int userId, int? categoryId = null, bool? isRead = null)
+    {
+        var query = _db.UserBooks
+            .Where(ub => ub.UserId == userId)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Author)
+            .Include(ub => ub.Book.Category)
+            .AsQueryable();
+
+        if (categoryId.HasValue)
+        {
+            query = query.Where(ub => ub.Book.Category.Id == categoryId);
+        }
+
+        if (isRead.HasValue)
+        {
+            query = query.Where(ub => ub.IsRead == isRead.Value);
+        }
+
+        return await query
+            .Select(ub => ub.Book)
+            .Distinct()
+            .ToListAsync();
+    }
+
+    public async Task<List<UserBook>> GetAllUserBooksAsync(int userId)
+    {
+        return await _db.UserBooks
+            .Where(ub => ub.UserId == userId)
+            .Include(ub => ub.Book)
+            .ThenInclude(b => b.Author)
+            .Include(ub => ub.Book.Category)
+            .ToListAsync();
+    }
+
+    public async Task UpdateUserBookAsync(UserBook userBook)
+    {
+        var existing = await _db.UserBooks.FindAsync(userBook.Id);
+        if (existing != null)
+        {
+            _db.Entry(existing).CurrentValues.SetValues(userBook);
+            await _db.SaveChangesAsync();
+        }
     }
 }
