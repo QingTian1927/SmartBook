@@ -16,7 +16,7 @@ public class RecommendationService : IRecommendationService
         _db = db;
         _geminiService = new GeminiService();
     }
-
+    
     public async Task<List<BookDisplayModel>> GetContentBasedRecommendationsAsync(int userId, int maxCount = 10)
     {
         var userReadBooks = await _db.UserBooks

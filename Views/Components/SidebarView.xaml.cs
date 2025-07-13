@@ -48,6 +48,7 @@ public partial class SidebarView : UserControl
 
     private void HistoryBtn_Click(object sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        MainWindow.Instance.Title = "SmartBook - Dashboard";
+        MainWindow.Instance.Navigate(new DashboardView());
     }
 }

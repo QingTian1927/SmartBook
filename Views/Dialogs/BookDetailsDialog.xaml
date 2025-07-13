@@ -1,0 +1,52 @@
+﻿<Window x:Class="SmartBook.Views.Dialogs.BookDetailsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Book Details"
+        SizeToContent="Height"
+        Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Book Info Section -->
+        <StackPanel>
+            <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="Bold" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding AuthorName}" FontSize="14" Foreground="Gray" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding CategoryName}" FontSize="13" Foreground="DarkGray" TextAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock Text="Average Rating:" FontSize="13" Margin="0,10,0,0"/>
+            <TextBlock Text="{Binding Rating}" FontSize="13" FontWeight="SemiBold"/>
+        </StackPanel>
+
+        <!-- Description Section -->
+        <Grid Grid.Row="1" Margin="0,10,0,10">
+            <!-- Loading Spinner and Text -->
+            <StackPanel x:Name="LoadingPanel"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed">
+                <ProgressBar IsIndeterminate="True" Width="120" Height="6" />
+                <TextBlock Text=" Loading description..." VerticalAlignment="Center"
+                           Margin="8,0,0,0" FontSize="12" Foreground="Gray" />
+            </StackPanel>
+
+            <!-- Description Text -->
+            <TextBlock x:Name="DescriptionTextBlock"
+                       Text="{Binding Description}"
+                       TextWrapping="Wrap"
+                       FontSize="13"
+                       Visibility="Visible"/>
+        </Grid>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <Button Content="Add to My Books" Width="120" Margin="5" Click="Add_Click"/>
+            <Button Content="Cancel" Width="80" Margin="5" Click="Cancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -3,11 +3,12 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using SmartBook.Core.DTOs;
+using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
 
 namespace SmartBook.Core.Services;
 
-public class GeminiService
+public class GeminiService : IGeminiService
 {
     private const string EndPoint =
         "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
@@ -198,5 +199,43 @@ public class GeminiService
         Console.WriteLine();
 
         return prompt;
+    }
+
+    public async Task<string> GenerateBookDescriptionAsync(Book book)
+    {
+        var prompt = $@"
+Generate a short, compelling 1–2 sentence description for the following book.
+Return only the description with no title, no author, and no intro text.
+
+Title: {book.Title}
+Author: {book.Author.Name}
+Category: {book.Category.Name}
+
+Example: 
+'A gripping dystopian tale where personal freedom is a dangerous dream. The story explores identity, resistance, and survival in a totalitarian regime.'
+
+Your response:
+";
+
+        string? responseJson = await GetGeminiResponseAsync(prompt);
+
+        try
+        {
+            using var doc = JsonDocument.Parse(responseJson);
+            var content = doc.RootElement
+                .GetProperty("candidates")[0]
+                .GetProperty("content")
+                .GetProperty("parts")[0]
+                .GetProperty("text")
+                .GetString();
+
+            return string.IsNullOrWhiteSpace(content)
+                ? "No description available. Let the story surprise you!"
+                : content.Trim();
+        }
+        catch
+        {
+            return "No description available. Let the story surprise you!";
+        }
     }
 }

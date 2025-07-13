@@ -1,7 +1,12 @@
-﻿namespace SmartBook.Core.DTOs;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-public class BookDisplayModel
+namespace SmartBook.Core.DTOs;
+
+public class BookDisplayModel : INotifyPropertyChanged
 {
+    private string? _description;
+    
     public int UserBookId { get; set; }
     public int BookId { get; set; }
 
@@ -15,7 +20,25 @@ public class BookDisplayModel
     public string? CoverImagePath { get; set; } = "";
 
     public string? Reason { get; set; } = ""; // 🆕 New property to explain why the book is recommended
-    public string? Description { get; set; }
+
+    public string? Description
+    {
+        get => _description;
+        set
+        {
+            if (_description != value)
+            {
+                _description = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string? name = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
 
     public override string ToString()
     {
