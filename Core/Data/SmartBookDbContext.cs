@@ -11,7 +11,7 @@ public partial class SmartBookDbContext : DbContext
     public SmartBookDbContext()
     {
     }
-    
+
     public SmartBookDbContext(DbContextOptions<SmartBookDbContext> options)
         : base(options)
     {
@@ -30,11 +30,12 @@ public partial class SmartBookDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserBook> UserBooks { get; set; }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-        if (!optionsBuilder.IsConfigured) {
+        var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+        if (!optionsBuilder.IsConfigured)
+        {
             optionsBuilder.UseSqlServer(config.GetConnectionString("DB"));
         }
     }
@@ -129,6 +130,7 @@ public partial class SmartBookDbContext : DbContext
             entity.HasIndex(e => e.Email, "UQ__Users__A9D105340F76449F").IsUnique();
 
             entity.Property(e => e.Email).HasMaxLength(255);
+            entity.Property(e => e.IsBanned).HasColumnName("is_banned");
             entity.Property(e => e.Password).HasMaxLength(512);
             entity.Property(e => e.Username).HasMaxLength(100);
         });

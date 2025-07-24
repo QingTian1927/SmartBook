@@ -13,6 +13,8 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
+    public bool IsBanned { get; set; }
+
     public virtual ICollection<AuthorEditRequest> AuthorEditRequestRequestedByUsers { get; set; } = new List<AuthorEditRequest>();
 
     public virtual ICollection<AuthorEditRequest> AuthorEditRequestReviewedByUsers { get; set; } = new List<AuthorEditRequest>();
