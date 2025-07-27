@@ -70,26 +70,9 @@
                                     <TextBlock Text="{Binding CategoryName}" FontSize="10" Foreground="DarkGray"
                                                Margin="5 0 5 0" TextAlignment="Center" />
 
-                                    <TextBlock FontSize="10" Margin="5 0 5 0" TextAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="❌ Unread" />
-                                                <Setter Property="Foreground" Value="Crimson" />
-                                                <Setter Property="FontWeight" Value="Bold" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsRead}" Value="True">
-                                                        <Setter Property="Text" Value="✅ Read" />
-                                                        <Setter Property="Foreground" Value="ForestGreen" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-
                                     <TextBlock Text="{Binding Rating, StringFormat=Rating: {0}}" FontSize="10"
                                                Margin="5 0 5 0" TextAlignment="Center" />
                                 </StackPanel>
-
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
