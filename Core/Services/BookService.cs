@@ -469,7 +469,7 @@ public class BookService : IBookService
             await _db.SaveChangesAsync();
         }
     }
-    
+
     public async Task<IEnumerable<BookDisplayModel>> GetBooksByAuthorIdAsync(int authorId)
     {
         var books = await _db.Books
@@ -494,12 +494,144 @@ public class BookService : IBookService
                 CoverImagePath = ""
             });
         }
+
         return result;
     }
-    
+
     public async Task<bool> UserHasBookAsync(int userId, BookDisplayModel book)
     {
         return await _db.UserBooks
             .AnyAsync(ub => ub.UserId == userId && ub.BookId == book.BookId);
     }
+
+    public async Task UpdateCategoryAsync(Category category)
+    {
+        var existing = await _db.Categories.FindAsync(category.Id);
+        if (existing != null)
+        {
+            existing.Name = category.Name;
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public async Task DeleteCategoryCascadeAsync(int categoryId)
+    {
+        var category = await _db.Categories
+            .Include(c => c.Books)
+            .ThenInclude(b => b.UserBooks)
+            .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+        if (category != null)
+        {
+            // Remove all UserBooks for each book
+            foreach (var book in category.Books)
+            {
+                _db.UserBooks.RemoveRange(book.UserBooks);
+            }
+
+            // Remove all books in category
+            _db.Books.RemoveRange(category.Books);
+
+            // Remove category
+            _db.Categories.Remove(category);
+
+            await _db.SaveChangesAsync();
+        }
+    }
+    
+    public async Task UpdateAuthorAsync(Author author)
+    {
+        var existing = await _db.Authors.FindAsync(author.Id);
+        if (existing != null)
+        {
+            existing.Name = author.Name;
+            existing.Bio = author.Bio;
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public async Task DeleteAuthorCascadeAsync(int authorId)
+    {
+        var author = await _db.Authors
+            .Include(a => a.Books)
+            .ThenInclude(b => b.UserBooks)
+            .FirstOrDefaultAsync(a => a.Id == authorId);
+
+        if (author != null)
+        {
+            // Remove user books for each book
+            foreach (var book in author.Books)
+            {
+                _db.UserBooks.RemoveRange(book.UserBooks);
+            }
+
+            // Remove books by author
+            _db.Books.RemoveRange(author.Books);
+
+            // Remove author
+            _db.Authors.Remove(author);
+
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public async Task<bool> TryAddCategory(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return false;
+        }
+
+        var nameLower = name.Trim().ToLower();
+
+        var exists = await _db.Categories.AnyAsync(c => c.Name.ToLower() == nameLower);
+        if (exists)
+        {
+            return false;
+        }
+
+        var category = new Category { Name = name.Trim() };
+        _db.Categories.Add(category);
+        await _db.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task UpdateCategory(Category category)
+    {
+        if (category == null)
+            throw new ArgumentNullException(nameof(category));
+
+        var existing = await _db.Categories.FindAsync(category.Id);
+        if (existing != null)
+        {
+            existing.Name = category.Name.Trim();
+            await _db.SaveChangesAsync();
+        }
+    }
+
+    public async Task DeleteCategoryCascade(int categoryId)
+    {
+        var category = await _db.Categories
+            .Include(c => c.Books)
+            .ThenInclude(b => b.UserBooks)
+            .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+        if (category != null)
+        {
+            // Remove all UserBooks for books in this category
+            foreach (var book in category.Books)
+            {
+                _db.UserBooks.RemoveRange(book.UserBooks);
+            }
+
+            // Remove all books for the category
+            _db.Books.RemoveRange(category.Books);
+
+            // Remove the category
+            _db.Categories.Remove(category);
+
+            await _db.SaveChangesAsync();
+        }
+    }
+
 }

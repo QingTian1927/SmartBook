@@ -40,6 +40,14 @@
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="SettingsBtn_Click" />
             
+            <Button x:Name="AdminAuthorsBtn" Content="Authors" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AdminAuthorsBtn_Click" />
+            
+            <Button x:Name="AdminCategoriesBtn" Content="Categories" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AdminCategoriesBtn_Click" />
+            
             <Button x:Name="AuthorEditRequestsBtn" Content="Author Edit Requests" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AuthorEditRequestsBtn_OnClickBtn_Click" />

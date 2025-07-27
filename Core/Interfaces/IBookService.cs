@@ -51,13 +51,27 @@ namespace SmartBook.Core.Interfaces
         Task<bool> TryAddCategoryAsync(string name);
 
         Task<bool> SubmitCategoryEditRequestAsync(int categoryId, string proposedName);
-        
+
         Task<bool> TryAddAuthorAsync(string name, string? bio);
-        
+
         Task<bool> SubmitAuthorEditRequestAsync(int authorId, string? proposedName, string? proposedBio);
 
         Task<IEnumerable<BookDisplayModel>> GetBooksByAuthorIdAsync(int authorId);
 
         Task<bool> UserHasBookAsync(int userId, BookDisplayModel book);
+
+        Task UpdateCategoryAsync(Category category);
+        
+        Task DeleteCategoryCascadeAsync(int categoryId);
+
+        Task UpdateAuthorAsync(Author author);
+
+        Task DeleteAuthorCascadeAsync(int authorId);
+        
+        Task<bool> TryAddCategory(string name);
+
+        Task UpdateCategory(Category category);
+
+        Task DeleteCategoryCascade(int categoryId);
     }
 }
