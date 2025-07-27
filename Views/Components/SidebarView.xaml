@@ -35,6 +35,10 @@
             <Button x:Name="AuthorEditRequestsBtn" Content="Author Edit Requests" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AuthorEditRequestsBtn_OnClickBtn_Click" />
+            
+            <Button x:Name="CategoryEditRequestsBtn" Content="Category Edit Requests" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="CategoryEditRequestsBtn_OnClickBtn_Click" />
 
             <Button Content="Log Out" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"

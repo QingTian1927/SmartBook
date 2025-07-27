@@ -7,4 +7,9 @@ public interface IEditRequestService
     Task<List<AuthorEditRequestDisplayModel>> GetAuthorEditRequestsAsync(string? keyword = null, string? status = null);
 
     Task<bool> ReviewAuthorEditRequestAsync(int requestId, bool approve, string? reviewComment);
+
+    Task<List<CategoryEditRequestDisplayModel>> GetCategoryEditRequestsAsync(string? keyword = null,
+        string? status = null);
+
+    Task<bool> ReviewCategoryEditRequestAsync(int requestId, bool approve, string? reviewComment);
 }
