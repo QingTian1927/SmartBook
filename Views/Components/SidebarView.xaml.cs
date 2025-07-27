@@ -77,4 +77,9 @@ public partial class SidebarView : UserControl
     {
         MainWindow.Instance.Navigate(new CategoryEditRequestsView());
     }
+
+    private void AuthorsBtn_OnClickBtn_Click(object sender, RoutedEventArgs e)
+    {
+        MainWindow.Instance.Navigate(new AuthorsView());
+    }
 }

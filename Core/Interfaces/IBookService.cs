@@ -56,5 +56,8 @@ namespace SmartBook.Core.Interfaces
         
         Task<bool> SubmitAuthorEditRequestAsync(int authorId, string? proposedName, string? proposedBio);
 
+        Task<IEnumerable<BookDisplayModel>> GetBooksByAuthorIdAsync(int authorId);
+
+        Task<bool> UserHasBookAsync(int userId, BookDisplayModel book);
     }
 }

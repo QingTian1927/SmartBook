@@ -256,7 +256,8 @@ public class BookService : IBookService
             {
                 Id = a.Id,
                 Name = a.Name,
-                Bio = a.Bio
+                Bio = a.Bio,
+                BookCount = _db.Books.Count(b => b.AuthorId == a.Id)
             })
             .OrderBy(a => a.Name)
             .Distinct()
@@ -466,5 +467,38 @@ public class BookService : IBookService
             _db.Entry(existing).CurrentValues.SetValues(userBook);
             await _db.SaveChangesAsync();
         }
+    }
+    
+    public async Task<IEnumerable<BookDisplayModel>> GetBooksByAuthorIdAsync(int authorId)
+    {
+        var books = await _db.Books
+            .Include(b => b.Author)
+            .Include(b => b.Category)
+            .Where(b => b.AuthorId == authorId)
+            .ToListAsync();
+
+        var result = new List<BookDisplayModel>();
+        foreach (var b in books)
+        {
+            var avgRating = await CalculateAverageRatingAsync(b.Id);
+            result.Add(new BookDisplayModel
+            {
+                BookId = b.Id,
+                Title = b.Title,
+                AuthorName = b.Author.Name,
+                CategoryName = b.Category.Name,
+                IsRead = false,
+                Rating = avgRating,
+                UserBookId = 0,
+                CoverImagePath = ""
+            });
+        }
+        return result;
+    }
+    
+    public async Task<bool> UserHasBookAsync(int userId, BookDisplayModel book)
+    {
+        return await _db.UserBooks
+            .AnyAsync(ub => ub.UserId == userId && ub.BookId == book.BookId);
     }
 }
