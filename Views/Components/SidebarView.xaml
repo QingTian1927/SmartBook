@@ -40,6 +40,10 @@
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="SettingsBtn_Click" />
             
+            <Button x:Name="AdminUsersBtn" Content="Users" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AdminUsersBtn_Click" />
+            
             <Button x:Name="AdminAuthorsBtn" Content="Authors" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AdminAuthorsBtn_Click" />

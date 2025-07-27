@@ -34,6 +34,16 @@ public partial class LoginView : Page
             );
             return false;
         }
+        
+        if (user.IsBanned) {
+            MessageBox.Show(
+                "Your account is banned. Please contact support for assistance.",
+                "Account Banned",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning
+            );
+            return false;
+        }
 
         ContextManager.CurrentUser = user;
         ContextManager.IsAdmin = false;
@@ -82,7 +92,6 @@ public partial class LoginView : Page
                 ContextManager.IsAdmin = true;
                 ContextManager.CurrentUser = null;
 
-                MessageBox.Show("Admin Login Successful");
                 MainWindow.Instance.Navigate(new DashboardView());
                 return;
             }
