@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:SmartBook.Views.Components"
              mc:Ignorable="d"
              Height="Auto" Width="Auto" Background="#1E2D40"
+             Loaded="SidebarView_OnLoaded"
              d:DesignHeight="Auto" d:DesignWidth="Auto">
     <Grid>
         <StackPanel Margin="20" VerticalAlignment="Stretch">
@@ -19,19 +20,23 @@
                 </StackPanel>
             </Border>
 
-            <Button Content="📖  Reading History" Margin="0 5" Padding="10"
+            <Button Content="My Library" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
-                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="HistoryBtn_Click" />
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="HomeBtn_Click" />
 
-            <Button Content="⭐  Recommendations" Margin="0 5" Padding="10"
+            <Button x:Name="RecommendationBtn" Content="Recommendations" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="RecommendationBtn_Click" />
 
-            <Button Content="⚙  Settings" Margin="0 5" Padding="10"
+            <Button x:Name="SettingsBtn" Content="Settings" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="SettingsBtn_Click" />
+            
+            <Button x:Name="AuthorEditRequestsBtn" Content="Author Edit Requests" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AuthorEditRequestsBtn_OnClickBtn_Click" />
 
-            <Button Content="🚪  Log Out" Margin="0 5" Padding="10"
+            <Button Content="Log Out" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="LogoutBtn_Click" />
         </StackPanel>

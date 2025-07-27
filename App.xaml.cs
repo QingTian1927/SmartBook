@@ -26,6 +26,7 @@ namespace SmartBook
                     services.AddSingleton<IAuthService, AuthService>();
                     services.AddSingleton<IRecommendationService, RecommendationService>();
                     services.AddSingleton<IGeminiService, GeminiService>();
+                    services.AddSingleton<IEditRequestService, EditRequestService>();
                 })
                 .Build();
         }

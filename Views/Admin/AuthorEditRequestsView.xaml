@@ -1,0 +1,167 @@
+﻿<Page x:Class="SmartBook.Views.Admin.AuthorEditRequestsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:views="clr-namespace:SmartBook.Views.Components"
+      Title="Review Author Edit Requests"
+      Loaded="Page_Loaded"
+      Background="White">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <views:SidebarView Grid.Column="0" CurrentUsername="{Binding CurrentUsername}" />
+
+        <Grid Grid.Column="1" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />  <!-- Back & Title -->
+                <RowDefinition Height="*" />     <!-- Pending Requests DataGrid -->
+                <RowDefinition Height="Auto" />  <!-- Detail/Review Panel -->
+                <RowDefinition Height="Auto" />  <!-- History Toggle -->
+                <RowDefinition Height="Auto" />  <!-- History List -->
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="20,20,0,10" Grid.Row="0">
+                <TextBlock Text="Author Edit Requests" FontSize="20" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+            </StackPanel>
+
+            <DataGrid
+                x:Name="RequestsDataGrid"
+                Grid.Row="1"
+                Margin="20 0 20 14"
+                AutoGenerateColumns="False"
+                SelectionMode="Single"
+                SelectionUnit="FullRow"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                IsReadOnly="True"
+                RowHeight="34"
+                HeadersVisibility="Column"
+                SelectionChanged="RequestsDataGrid_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="40" />
+                    <DataGridTextColumn Header="Author" Binding="{Binding CurrentAuthorName}" Width="120" />
+                    <DataGridTextColumn Header="Requested By" Binding="{Binding RequestedByUsername}" Width="100" />
+                    <DataGridTextColumn Header="Proposed Name" Binding="{Binding ProposedName}" Width="100" />
+                    <DataGridTextColumn Header="Proposed Bio" Binding="{Binding ProposedBio}" Width="120" />
+                    <DataGridTextColumn Header="Requested At"
+                                        Binding="{Binding RequestedAt, StringFormat='yyyy-MM-dd HH:mm'}" Width="120" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="80" />
+                    <DataGridTextColumn Header="Review Comment" Binding="{Binding ReviewComment}" Width="140" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border x:Name="DetailBorder"
+                    Grid.Row="2"
+                    Margin="20 0 24 18"
+                    Background="#F9F9F9"
+                    BorderBrush="#DDD"
+                    BorderThickness="1"
+                    CornerRadius="7"
+                    Padding="20"
+                    Visibility="Collapsed">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>      <!-- Current/Proposed info -->
+                        <RowDefinition Height="Auto"/>      <!-- Metadata info -->
+                        <RowDefinition Height="Auto"/>      <!-- Review comment -->
+                        <RowDefinition Height="Auto"/>      <!-- Approve/Reject buttons -->
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                            <TextBlock Text="CURRENT AUTHOR" FontWeight="Bold" Foreground="#556" FontSize="13" Margin="0,0,0,6" />
+                            <TextBlock Text="Name:" FontWeight="Bold" />
+                            <TextBlock x:Name="CurrentNameText" Margin="0,0,0,8" />
+                            <TextBlock Text="Bio:" FontWeight="Bold" />
+                            <Border Padding="6" Background="White" CornerRadius="4" BorderBrush="#EEE" BorderThickness="1" Height="80" VerticalAlignment="Top">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBlock x:Name="CurrentBioText" TextWrapping="Wrap" Foreground="DimGray" />
+                                </ScrollViewer>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="PROPOSED CHANGES" FontWeight="Bold" Foreground="#264C74" FontSize="13" Margin="0,0,0,6" />
+                            <TextBlock Text="New Name:" FontWeight="Bold" />
+                            <TextBlock x:Name="ProposedNameText" Margin="0,0,0,8" Foreground="#1E2D40" FontStyle="Italic" />
+                            <TextBlock Text="New Bio:" FontWeight="Bold" />
+                            <Border Padding="6" Background="White" CornerRadius="4" BorderBrush="#EEE" BorderThickness="1" Height="80" VerticalAlignment="Top">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <TextBlock x:Name="ProposedBioText" TextWrapping="Wrap" Foreground="#1E2D40" FontStyle="Italic" />
+                                </ScrollViewer>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+                        <TextBlock Text="Status:" FontWeight="Bold" />
+                        <TextBlock x:Name="StatusText" Margin="8,0,16,0" Foreground="DarkSlateBlue" />
+                        <TextBlock Text="Requested by:" FontWeight="Bold" />
+                        <TextBlock x:Name="RequestedByText" Margin="8,0,16,0" />
+                        <TextBlock Text="Requested At:" FontWeight="Bold" />
+                        <TextBlock x:Name="RequestedAtText" Margin="8,0,0,0" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Margin="0,0,0,12">
+                        <TextBlock Text="Admin Review Comment:" FontWeight="Bold" />
+                        <TextBox x:Name="ReviewCommentBox"
+                                 AcceptsReturn="True"
+                                 Height="54"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,8">
+                        <Button x:Name="ApproveBtn" Content="Approve" Width="120" Margin="0,0,12,0"
+                                Background="ForestGreen" Foreground="White" FontWeight="Bold"
+                                Click="ApproveButton_Click" />
+                        <Button x:Name="RejectBtn" Content="Reject" Width="120"
+                                Background="Crimson" Foreground="White" FontWeight="Bold"
+                                Click="RejectButton_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <ToggleButton x:Name="ToggleHistoryButton"
+                          Grid.Row="3"
+                          Content="Show History"
+                          Width="140"
+                          Height="32"
+                          FontWeight="Bold"
+                          HorizontalAlignment="Left"
+                          Margin="20,0,0,18"
+                          Padding="6,2"
+                          Click="ToggleHistoryButton_Click"/>
+
+            <DataGrid x:Name="HistoryDataGrid"
+                      Grid.Row="4"
+                      Margin="20,0,24,18"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="True"
+                      RowHeight="30"
+                      HeadersVisibility="Column"
+                      Visibility="Collapsed"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="40" />
+                    <DataGridTextColumn Header="Proposed Name" Binding="{Binding ProposedName}" Width="120" />
+                    <DataGridTextColumn Header="Proposed Bio" Binding="{Binding ProposedBio}" Width="180" />
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="80" />
+                    <DataGridTextColumn Header="Review Comment" Binding="{Binding ReviewComment}" Width="200" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Page>
