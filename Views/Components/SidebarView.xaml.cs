@@ -82,4 +82,9 @@ public partial class SidebarView : UserControl
     {
         MainWindow.Instance.Navigate(new AuthorsView());
     }
+
+    private void CategoriesBtn_Click(object sender, RoutedEventArgs e)
+    {
+        MainWindow.Instance.Navigate(new CategoriesView());
+    }
 }

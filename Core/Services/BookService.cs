@@ -223,7 +223,8 @@ public class BookService : IBookService
         return await _db.Categories.Select(c => new CategoryDisplayModel
             {
                 Id = c.Id,
-                Name = c.Name
+                Name = c.Name,
+                BookCount = _db.Books.Count(b => b.CategoryId == c.Id)
             })
             .OrderBy(c => c.Name)
             .Distinct()

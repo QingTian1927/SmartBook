@@ -31,6 +31,10 @@
             <Button x:Name="AuthorsBtn" Content="Authors" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AuthorsBtn_OnClickBtn_Click" />
+            
+            <Button x:Name="CategoriesBtn" Content="Categories" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="CategoriesBtn_Click" />
 
             <Button x:Name="SettingsBtn" Content="Settings" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
