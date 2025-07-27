@@ -26,6 +26,8 @@ public partial class SidebarView : UserControl
             
             RecommendationBtn.Visibility = Visibility.Collapsed;
             SettingsBtn.Visibility = Visibility.Collapsed;
+            AuthorsBtn.Visibility = Visibility.Collapsed;
+            CategoriesBtn.Visibility = Visibility.Collapsed;
             return;
         }
         
