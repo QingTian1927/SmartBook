@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <StartupObject>SmartBook.App</StartupObject>
   </PropertyGroup>
 
