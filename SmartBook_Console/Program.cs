@@ -3,9 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Configuration;
-using BCrypt.Net;
 using SmartBook_Console.Core;
-using SmartBook_Console.Models;
+using SmartBook.Core.Models;
 
 namespace SmartBook_Console
 {

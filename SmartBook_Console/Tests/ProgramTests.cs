@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SmartBook_Console;
 using SmartBook_Console.Core;
-using SmartBook_Console.Models;
+using SmartBook.Core.Data;
+using SmartBook.Core.Models;
 using Xunit;
 
 namespace SmartBook_Console.Tests
@@ -16,15 +17,15 @@ namespace SmartBook_Console.Tests
     public class ProgramTests : IDisposable
     {
         private readonly BookManager _bookManager;
-        private readonly SmartBookContext _db;
+        private readonly SmartBookDbContext _db;
 
         public ProgramTests()
         {
-            var options = new DbContextOptionsBuilder<SmartBookContext>()
+            var options = new DbContextOptionsBuilder<SmartBookDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
-            _db = new SmartBookContext(options);
+            _db = new SmartBookDbContext(options);
 
             _db.Authors.AddRange(
                 new Author { Id = 1, Name = "Author 1" },
@@ -167,7 +168,7 @@ namespace SmartBook_Console.Tests
                     ["Admin:email"] = "admin@smartbook.com",
                     // hash for "adminpassword"
                     ["Admin:password"] = BCrypt.Net.BCrypt.HashPassword("adminpassword")
-                })
+                }!)
                 .Build();
 
             bool actual = ProgramTestHelper.LoginUsingCredentials(emailInput, passwordInput, config);

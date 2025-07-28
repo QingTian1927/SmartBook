@@ -33,10 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tests\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -52,9 +48,4 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="SmartBook_Console\SmartBook_Console.csproj" />
-  </ItemGroup>
-
 </Project>

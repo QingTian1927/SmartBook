@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using SmartBook_Console.Models;
+using SmartBook.Core;
+using SmartBook.Core.Data;
+using SmartBook.Core.Models;
 
 namespace SmartBook_Console.Core
 {
     public class BookManager
     {
-        private readonly SmartBookContext _dbContext;
+        private readonly SmartBookDbContext _dbContext;
 
-        public BookManager(SmartBookContext dbContext)
+        public BookManager(SmartBookDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
         public BookManager()
         {
-            _dbContext = new SmartBookContext();
+            _dbContext = new SmartBookDbContext();
         }
 
         public List<Book> GetAllBooks()
