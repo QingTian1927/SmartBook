@@ -26,13 +26,13 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build SmartBook.csproj --configuration Release --no-restore
 
       - name: Run tests
         run: dotnet test --no-build --configuration Release --verbosity normal
 
       - name: Publish
-        run: dotnet publish SmartBook.csproj -c Release -r win-x64 --self-contained true --output ./publish --no-build
+        run: dotnet publish SmartBook.csproj -c Release -r win-x64 --self-contained true --output ./publish
 
       - name: Upload Publish Artifact
         uses: actions/upload-artifact@v4
