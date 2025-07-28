@@ -19,11 +19,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore
-
       - name: Clean build outputs
         run: dotnet clean --configuration Release
+
+      - name: Restore dependencies
+        run: dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release --no-restore
@@ -37,5 +37,5 @@ jobs:
       - name: Upload Publish Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: wpf-app
+          name: SmartBook
           path: ./publish
