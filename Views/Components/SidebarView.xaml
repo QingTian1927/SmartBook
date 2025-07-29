@@ -20,6 +20,10 @@
                 </StackPanel>
             </Border>
 
+            <Button x:Name="AdminHomeBtn" Content="Dashboard" Margin="0 5" Padding="10"
+                    Background="Transparent" Foreground="White" BorderBrush="Transparent"
+                    HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="AdminHomeBtn_Click" />
+            
             <Button Content="My Library" Margin="0 5" Padding="10"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="HomeBtn_Click" />
@@ -36,7 +40,7 @@
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="CategoriesBtn_Click" />
 
-            <Button x:Name="SettingsBtn" Content="Settings" Margin="0 5" Padding="10"
+            <Button x:Name="SettingsBtn" Content="Settings" Margin="0 5" Padding="10" Visibility="Collapsed"
                     Background="Transparent" Foreground="White" BorderBrush="Transparent"
                     HorizontalContentAlignment="Left" FontSize="14" Cursor="Hand" Click="SettingsBtn_Click" />
             

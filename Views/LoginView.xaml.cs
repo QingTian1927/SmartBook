@@ -7,6 +7,7 @@ using SmartBook.Core.Interfaces;
 using SmartBook.Core.Models;
 using SmartBook.Core.Services;
 using SmartBook.Utils;
+using SmartBook.Views.Admin;
 
 namespace SmartBook.Views;
 
@@ -92,7 +93,7 @@ public partial class LoginView : Page
                 ContextManager.IsAdmin = true;
                 ContextManager.CurrentUser = null;
 
-                MainWindow.Instance.Navigate(new DashboardView());
+                MainWindow.Instance.Navigate(new AdminDashboardView());
                 return;
             }
         }

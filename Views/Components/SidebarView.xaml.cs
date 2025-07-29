@@ -36,6 +36,7 @@ public partial class SidebarView : UserControl
         AdminCategoriesBtn.Visibility = Visibility.Collapsed;
         AdminAuthorsBtn.Visibility = Visibility.Collapsed;
         AdminUsersBtn.Visibility = Visibility.Collapsed;
+        AdminHomeBtn.Visibility = Visibility.Collapsed;
     }
 
     public static readonly DependencyProperty CurrentUsernameProperty =
@@ -106,5 +107,10 @@ public partial class SidebarView : UserControl
     private void AdminUsersBtn_Click(object sender, RoutedEventArgs e)
     {
         MainWindow.Instance.Navigate(new ManageUsersView());
+    }
+
+    private void AdminHomeBtn_Click(object sender, RoutedEventArgs e)
+    {
+        MainWindow.Instance.Navigate(new AdminDashboardView());
     }
 }
